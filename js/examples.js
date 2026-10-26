@@ -56,7 +56,7 @@ x:      DATA  0
         IN    a
         IN    b
         LOAD  a
-        CMP   b         ; Flags aus a - b
+        CMP   b         ; Flags ← a - b
         JGE   a_max     ; a - b >= 0  →  a ist größer oder gleich
         OUT   b
         HALT
@@ -70,7 +70,7 @@ b:      DATA  0
         IN    a
         IN    b
         LOAD  a
-        CMP   b         ; flags from a - b
+        CMP   b         ; flags ← a - b
         JGE   a_max     ; a - b >= 0  →  a is greater or equal
         OUT   b
         HALT

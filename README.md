@@ -45,7 +45,7 @@ The user interface is available in **English and German** (switch at the top rig
 | 05 / 15 | `MUL` | ACC ← ACC · value |
 | 06 / 16 | `DIV` | ACC ← ACC // value (as in Python) |
 | 07 / 17 | `MOD` | ACC ← ACC % value (as in Python) |
-| 08 / 18 | `CMP` | Set flags from ACC − value, ACC unchanged |
+| 08 / 18 | `CMP` | Flags ← ACC − value (ACC unchanged) |
 | 20 | `JMP z` | Always jump |
 | 21 … 26 | `JE JNE JL JLE JG JGE` | Jump depending on Z/N (equal, not equal, less, …) |
 | 30 | `IN x` | mem[x] ← input |

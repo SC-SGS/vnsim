@@ -44,7 +44,7 @@ Die Oberfläche gibt es auf **Deutsch und Englisch** (Umschalter oben rechts ode
 | 05 / 15 | `MUL` | Akku ← Akku · Wert |
 | 06 / 16 | `DIV` | Akku ← Akku // Wert (wie Python) |
 | 07 / 17 | `MOD` | Akku ← Akku % Wert (wie Python) |
-| 08 / 18 | `CMP` | Flags aus Akku − Wert, Akku bleibt unverändert |
+| 08 / 18 | `CMP` | Flags ← Akku − Wert (Akku bleibt) |
 | 20 | `JMP z` | Springe immer |
 | 21 … 26 | `JE JNE JL JLE JG JGE` | Springe abhängig von Z/N (gleich, ungleich, kleiner, …) |
 | 30 | `IN x` | Speicher[x] ← Eingabe |
