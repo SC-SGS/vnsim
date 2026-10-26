@@ -252,6 +252,8 @@ start:  LOAD  #5      ; Direktwert
         STORE 42      ; Adresse als Zahl
         JMP   start   ; Sprungziel
 x:      DATA  7       ; Datenzelle(n): DATA 1, 2, 3</pre>
+<p>Eine Zahl ohne <code>#</code> ist eine <b>Adresse</b> – für die Zahl 2 <code>#2</code> schreiben
+(<code>MOD 2</code> rechnet mit dem Inhalt von Zelle 2).</p>
 <p>Labels stehen am Zeilenanfang und enden mit <code>:</code>. <code>x+1</code> adressiert die Zelle nach <code>x</code>.
 Groß-/Kleinschreibung spielt keine Rolle.</p>
 <h2>Befehlszyklus</h2>
@@ -502,6 +504,8 @@ start:  LOAD  #5      ; immediate value
         STORE 42      ; address as a number
         JMP   start   ; jump target
 x:      DATA  7       ; data cell(s): DATA 1, 2, 3</pre>
+<p>A number without <code>#</code> is an <b>address</b> – write <code>#2</code> for the number 2
+(<code>MOD 2</code> uses the contents of cell 2).</p>
 <p>Labels start a line and end with <code>:</code>. <code>x+1</code> addresses the cell after <code>x</code>.
 Upper and lower case are treated the same.</p>
 <h2>Instruction cycle</h2>
