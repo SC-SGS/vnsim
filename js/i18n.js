@@ -224,6 +224,10 @@ Schrift: TeX Gyre Heros (GUST Font License)</p>`,
 <code>name: DATA w1, w2, …</code> legt die Werte in die nächsten freien Speicherzellen; <code>name</code> ist
 die Adresse der ersten Zelle. Die Maschine kennt DATA nicht – wird eine solche Zelle als Befehl ausgeführt,
 gilt ihr Wert als Opcode.</p>
+<p><b>Speicherstelle benennen:</b> <code>b: DATA 0</code> reserviert die nächste freie Zelle mit dem Startwert 0
+und gibt ihr den Namen <code>b</code>, ähnlich einer Variablen. Danach kann man überall <code>b</code> statt der
+Adresse schreiben, z. B. <code>IN b</code>, <code>LOAD b</code>, <code>STORE b</code>; der Assembler setzt die
+Adresse ein.</p>
 <h2>Farben im Speicher</h2>
 <p><b>Gelb</b>: Befehl (Opcode und Operand) – vom Assembler erzeugt oder zur Laufzeit als Befehl geholt.
 <b>Blau</b>: Daten – mit DATA angelegt oder zur Laufzeit beschrieben (STORE, IN).
@@ -470,6 +474,10 @@ Font: TeX Gyre Heros (GUST Font License)</p>`,
 <code>name: DATA v1, v2, …</code> places the values in the next free memory cells; <code>name</code> is the
 address of the first cell. The machine does not know DATA – if such a cell is executed as an instruction,
 its value is taken as an opcode.</p>
+<p><b>Naming a memory cell:</b> <code>b: DATA 0</code> reserves the next free cell with initial value 0 and
+gives it the name <code>b</code>, similar to a variable. Afterwards you can write <code>b</code> instead of the
+address everywhere, e.g. <code>IN b</code>, <code>LOAD b</code>, <code>STORE b</code>; the assembler fills in
+the address.</p>
 <h2>Colours in memory</h2>
 <p><b>Yellow</b>: instruction (opcode and operand) – produced by the assembler or fetched as an instruction at run time.
 <b>Blue</b>: data – created with DATA or written at run time (STORE, IN).

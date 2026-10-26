@@ -65,6 +65,10 @@ places the values in the next free memory cells; `name` is the address of the fi
 The machine itself does not know `DATA` – if such a cell is executed as an instruction, its value
 is taken as an opcode.
 
+**Naming a memory cell:** `b: DATA 0` reserves the next free cell with initial value 0 and gives it
+the name `b`, similar to a variable. Afterwards you can write `b` instead of the address everywhere,
+e.g. `IN b`, `LOAD b`, `STORE b`; the assembler fills in the address.
+
 ### Colours in memory
 
 | Colour | Meaning |

@@ -64,6 +64,10 @@ legt die Werte in die nächsten freien Speicherzellen; `name` ist die Adresse de
 Die Maschine selbst kennt `DATA` nicht – wird eine solche Zelle als Befehl ausgeführt, gilt ihr Wert
 als Opcode.
 
+**Speicherstelle benennen:** `b: DATA 0` reserviert die nächste freie Zelle mit dem Startwert 0 und gibt
+ihr den Namen `b`, ähnlich einer Variablen. Danach kann man überall `b` statt der Adresse schreiben,
+z. B. `IN b`, `LOAD b`, `STORE b`; der Assembler setzt die Adresse ein.
+
 ### Farben im Speicher
 
 | Farbe | Bedeutung |
