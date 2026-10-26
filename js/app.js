@@ -404,6 +404,10 @@
 
   // ------------------------------------------------------------------ Befehlsreferenz
 
+  function buildAbout() {
+    $('about').innerHTML = t('about.html');
+  }
+
   function buildHelp() {
     const rows = INSTRUCTIONS.map(ins => {
       const op = { none: '', addr: ' x', imm: ' #n', target: ' ' + t('help.target') }[ins.operand];
@@ -602,6 +606,7 @@
     applyStaticTexts();
     fillExamples();
     buildHelp();
+    buildAbout();
     view.rebuild();
     ui.microlog.innerHTML = '';
     newInstruction = true;
@@ -626,6 +631,7 @@
   buildMemTable();
   applyStaticTexts();
   buildHelp();
+  buildAbout();
   bind();
   ui.source.value = initialSource();
   if (assembleAndLoad()) setStatus('', t('st.ready'), t('st.readyText'));

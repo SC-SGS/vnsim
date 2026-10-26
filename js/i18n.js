@@ -159,6 +159,7 @@ var VN = (typeof VN !== 'undefined') ? VN : {};
       'ui.tab.program': 'Programm',
       'ui.tab.memory': 'Speicher',
       'ui.tab.help': 'Befehle',
+      'ui.tab.about': 'Über',
       'ui.source': 'Assembler-Quelltext',
       'ui.memHint': 'Werte direkt ändern: Programm und Daten liegen im selben Speicher.',
       'ui.memAddr': 'Adr.',
@@ -205,6 +206,15 @@ var VN = (typeof VN !== 'undefined') ? VN : {};
       'mem.noInstr': '? kein Befehl',
       'mem.data': 'Daten',
 
+      'about.html': `
+<h2>VNSim – Von-Neumann-Simulator</h2>
+<p>Simulator eines einfachen Von-Neumann-Rechners mit Akkumulator: Programm und Daten liegen im selben
+Speicher, jeder Befehl läuft sichtbar in den Phasen Fetch, Decode, Fetch Operands, Execute und Write Back ab.</p>
+<p>Entstanden im Rahmen der Vorlesung „Informatik für Ingenieurwissenschaften“ an der Universität Stuttgart.</p>
+<p>Autor: Dirk Pflüger<br>
+Quellcode: <a href="https://github.com/SC-SGS/vnsim" target="_blank" rel="noopener">github.com/SC-SGS/vnsim</a><br>
+Lizenz: MIT<br>
+Schrift: TeX Gyre Heros (GUST Font License)</p>`,
       'help.target': 'ziel',
       'help.html': `
 <h2>Befehlssatz</h2>
@@ -390,6 +400,7 @@ oder innerhalb der CPU übertragen.</p>
       'ui.tab.program': 'Program',
       'ui.tab.memory': 'Memory',
       'ui.tab.help': 'Instructions',
+      'ui.tab.about': 'About',
       'ui.source': 'Assembly source code',
       'ui.memHint': 'Edit values directly: program and data share the same memory.',
       'ui.memAddr': 'Addr.',
@@ -436,6 +447,16 @@ oder innerhalb der CPU übertragen.</p>
       'mem.noInstr': '? no instruction',
       'mem.data': 'Data',
 
+      'about.html': `
+<h2>VNSim – Von Neumann Simulator</h2>
+<p>Simulator of a simple von Neumann computer with an accumulator: program and data share the same
+memory, and every instruction runs visibly through the phases Fetch, Decode, Fetch Operands, Execute and Write Back.</p>
+<p>Developed for the lecture “Informatik für Ingenieurwissenschaften” (Computer Science for Engineers)
+at the University of Stuttgart.</p>
+<p>Author: Dirk Pflüger<br>
+Source code: <a href="https://github.com/SC-SGS/vnsim" target="_blank" rel="noopener">github.com/SC-SGS/vnsim</a><br>
+License: MIT<br>
+Font: TeX Gyre Heros (GUST Font License)</p>`,
       'help.target': 'target',
       'help.html': `
 <h2>Instruction set</h2>
