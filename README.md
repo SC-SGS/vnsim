@@ -10,6 +10,9 @@ instruction runs visibly through the five phases
 **Fetch → Decode → Fetch Operands → Execute → Write Back** as a sequence of micro steps,
 with values travelling over data, address and control bus.
 
+Developed for the lecture “Informatik für Ingenieurwissenschaften” (Computer Science for Engineers)
+at the University of Stuttgart.
+
 The user interface is available in **English and German** (switch at the top right, or use
 `?lang=en` / `?lang=de` in the URL).
 
@@ -23,6 +26,8 @@ The user interface is available in **English and German** (switch at the top rig
 - Numbers in decimal, hexadecimal or binary (16-bit two's complement).
 - Counters for instructions, clock cycles (micro steps) and memory accesses – to compare the cost of programs.
 - Share programs as links (`…/vnsim/#p=…`), e.g. on slides, QR codes or exercise sheets.
+- Example programs: expression from the lecture, maximum, countdown, sum 1 … n, factorial,
+  self-modifying list sum.
 - Presentation mode for projectors (key **P**).
 - Works offline: just open `index.html` – no build step, no dependencies.
 
@@ -35,21 +40,37 @@ The user interface is available in **English and German** (switch at the top rig
 
 ### Instruction set
 
-| Code | Instruction | Effect |
-|---|---|---|
-| 00 | `HALT` | Stop the program (so empty memory halts immediately) |
-| 01 / 11 | `LOAD x` / `LOAD #n` | ACC ← mem[x] or n |
-| 02 | `STORE x` | mem[x] ← ACC |
-| 03 / 13 | `ADD` | ACC ← ACC + value |
-| 04 / 14 | `SUB` | ACC ← ACC − value |
-| 05 / 15 | `MUL` | ACC ← ACC · value |
-| 06 / 16 | `DIV` | ACC ← ACC // value (as in Python) |
-| 07 / 17 | `MOD` | ACC ← ACC % value (as in Python) |
-| 08 / 18 | `CMP` | Flags ← ACC − value (ACC unchanged) |
-| 20 | `JMP z` | Always jump |
-| 21 … 26 | `JE JNE JL JLE JG JGE` | Jump depending on Z/N (equal, not equal, less, …) |
-| 30 | `IN x` | mem[x] ← input |
-| 31 / 41 | `OUT x` / `OUT #n` | output ← mem[x] or n |
+| Code | Instruction | Effect | sets |
+|---|---|---|---|
+| 00 | `HALT` | Stop the program |  |
+| 01 | `LOAD x` | ACC ← mem[x] |  |
+| 11 | `LOAD #n` | ACC ← n |  |
+| 02 | `STORE x` | mem[x] ← ACC |  |
+| 03 | `ADD x` | ACC ← ACC + mem[x] | Z N |
+| 13 | `ADD #n` | ACC ← ACC + n | Z N |
+| 04 | `SUB x` | ACC ← ACC − mem[x] | Z N |
+| 14 | `SUB #n` | ACC ← ACC − n | Z N |
+| 05 | `MUL x` | ACC ← ACC · mem[x] | Z N |
+| 15 | `MUL #n` | ACC ← ACC · n | Z N |
+| 06 | `DIV x` | ACC ← ACC // mem[x] | Z N |
+| 16 | `DIV #n` | ACC ← ACC // n | Z N |
+| 07 | `MOD x` | ACC ← ACC % mem[x] | Z N |
+| 17 | `MOD #n` | ACC ← ACC % n | Z N |
+| 08 | `CMP x` | Flags ← ACC − mem[x] (ACC unchanged) | Z N |
+| 18 | `CMP #n` | Flags ← ACC − n (ACC unchanged) | Z N |
+| 20 | `JMP target` | Always jump |  |
+| 21 | `JE target` | Jump if equal (Z = 1) |  |
+| 22 | `JNE target` | Jump if not equal (Z = 0) |  |
+| 23 | `JL target` | Jump if less (N = 1) |  |
+| 24 | `JLE target` | Jump if less or equal (N = 1 or Z = 1) |  |
+| 25 | `JG target` | Jump if greater (N = 0 and Z = 0) |  |
+| 26 | `JGE target` | Jump if greater or equal (N = 0) |  |
+| 30 | `IN x` | mem[x] ← input |  |
+| 31 | `OUT x` | output ← mem[x] |  |
+| 41 | `OUT #n` | output ← n |  |
+
+ACC = accumulator, mem[x] = contents of cell x. DIV and MOD work like `//` and `%` in Python.
+HALT has opcode 00 – so empty memory halts immediately.
 
 Immediate values (`#n`) use opcode + 10. The flags are set by ADD, SUB, MUL, DIV, MOD and CMP,
 but not by LOAD (like `mov` on x86).
@@ -92,7 +113,8 @@ start:  LOAD  #5      ; immediate value
 x:      DATA  7, 8    ; data cells
 ```
 
-Upper and lower case are treated the same; labels start a line and end with `:`.
+A number without `#` is an **address** – write `#2` for the number 2 (`MOD 2` uses the contents of
+cell 2). Upper and lower case are treated the same; labels start a line and end with `:`.
 
 ## Usage
 
@@ -103,6 +125,9 @@ Upper and lower case are treated the same; labels start a line and end with `:`.
 | **Pause / Reset** | Space / Esc |
 | **Link** | copies a link containing the current program |
 | **Present** | presentation mode (P) |
+
+Tabs on the left: **Program** (editor), **Memory** (edit cells, disassembly), **Instructions**
+(instruction reference), **About** (information on the simulator).
 
 The program is also kept in the browser's local storage.
 

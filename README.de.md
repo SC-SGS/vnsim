@@ -9,6 +9,8 @@ Akkumulator wird als Schaubild dargestellt; jeder Befehl läuft sichtbar in den 
 **Fetch → Decode → Fetch Operands → Execute → Write Back** als Folge von Mikroschritten ab,
 und die Werte wandern über Daten-, Adress- und Steuerbus.
 
+Entstanden im Rahmen der Vorlesung „Informatik für Ingenieurwissenschaften“ an der Universität Stuttgart.
+
 Die Oberfläche gibt es auf **Deutsch und Englisch** (Umschalter oben rechts oder `?lang=de` /
 `?lang=en` in der Adresse).
 
@@ -22,6 +24,8 @@ Die Oberfläche gibt es auf **Deutsch und Englisch** (Umschalter oben rechts ode
 - Zahlen dezimal, hexadezimal oder binär (16-Bit-Zweierkomplement).
 - Zähler für Befehle, Takte (Mikroschritte) und Speicherzugriffe – zum Vergleich der Kosten von Programmen.
 - Programme als Link teilen (`…/vnsim/#p=…`), z. B. auf Folien, als QR-Code oder auf Übungsblättern.
+- Beispielprogramme: Ausdruck aus der Vorlesung, Maximum, Countdown, Summe 1 … n, Fakultät,
+  selbstmodifizierende Listensumme.
 - Beamer-Modus (Taste **P**).
 - Läuft offline: einfach `index.html` öffnen – kein Build, keine Abhängigkeiten.
 
@@ -34,21 +38,37 @@ Die Oberfläche gibt es auf **Deutsch und Englisch** (Umschalter oben rechts ode
 
 ### Befehlssatz
 
-| Code | Befehl | Wirkung |
-|---|---|---|
-| 00 | `HALT` | Programm anhalten (leerer Speicher hält also sofort an) |
-| 01 / 11 | `LOAD x` / `LOAD #n` | Akku ← Speicher[x] bzw. n |
-| 02 | `STORE x` | Speicher[x] ← Akku |
-| 03 / 13 | `ADD` | Akku ← Akku + Wert |
-| 04 / 14 | `SUB` | Akku ← Akku − Wert |
-| 05 / 15 | `MUL` | Akku ← Akku · Wert |
-| 06 / 16 | `DIV` | Akku ← Akku // Wert (wie Python) |
-| 07 / 17 | `MOD` | Akku ← Akku % Wert (wie Python) |
-| 08 / 18 | `CMP` | Flags ← Akku − Wert (Akku bleibt) |
-| 20 | `JMP z` | Springe immer |
-| 21 … 26 | `JE JNE JL JLE JG JGE` | Springe abhängig von Z/N (gleich, ungleich, kleiner, …) |
-| 30 | `IN x` | Speicher[x] ← Eingabe |
-| 31 / 41 | `OUT x` / `OUT #n` | Ausgabe ← Speicher[x] bzw. n |
+| Code | Befehl | Wirkung | setzt |
+|---|---|---|---|
+| 00 | `HALT` | Programm anhalten |  |
+| 01 | `LOAD x` | Akku ← Speicher[x] |  |
+| 11 | `LOAD #n` | Akku ← n |  |
+| 02 | `STORE x` | Speicher[x] ← Akku |  |
+| 03 | `ADD x` | Akku ← Akku + Speicher[x] | Z N |
+| 13 | `ADD #n` | Akku ← Akku + n | Z N |
+| 04 | `SUB x` | Akku ← Akku − Speicher[x] | Z N |
+| 14 | `SUB #n` | Akku ← Akku − n | Z N |
+| 05 | `MUL x` | Akku ← Akku · Speicher[x] | Z N |
+| 15 | `MUL #n` | Akku ← Akku · n | Z N |
+| 06 | `DIV x` | Akku ← Akku // Speicher[x] | Z N |
+| 16 | `DIV #n` | Akku ← Akku // n | Z N |
+| 07 | `MOD x` | Akku ← Akku % Speicher[x] | Z N |
+| 17 | `MOD #n` | Akku ← Akku % n | Z N |
+| 08 | `CMP x` | Flags ← Akku − Speicher[x] (Akku bleibt) | Z N |
+| 18 | `CMP #n` | Flags ← Akku − n (Akku bleibt) | Z N |
+| 20 | `JMP ziel` | Springe immer |  |
+| 21 | `JE ziel` | Springe, wenn gleich (Z = 1) |  |
+| 22 | `JNE ziel` | Springe, wenn ungleich (Z = 0) |  |
+| 23 | `JL ziel` | Springe, wenn kleiner (N = 1) |  |
+| 24 | `JLE ziel` | Springe, wenn kleiner oder gleich (N = 1 oder Z = 1) |  |
+| 25 | `JG ziel` | Springe, wenn größer (N = 0 und Z = 0) |  |
+| 26 | `JGE ziel` | Springe, wenn größer oder gleich (N = 0) |  |
+| 30 | `IN x` | Speicher[x] ← Eingabe |  |
+| 31 | `OUT x` | Ausgabe ← Speicher[x] |  |
+| 41 | `OUT #n` | Ausgabe ← n |  |
+
+Akku = Akkumulator, Speicher[x] = Inhalt der Zelle x. DIV und MOD rechnen wie `//` und `%` in Python.
+HALT hat den Opcode 00 – leerer Speicher hält also sofort an.
 
 Direktwerte (`#n`) haben den Opcode + 10. Die Flags werden von ADD, SUB, MUL, DIV, MOD und CMP gesetzt,
 nicht von LOAD (wie `mov` bei x86).
@@ -91,7 +111,8 @@ start:  LOAD  #5      ; Direktwert
 x:      DATA  7, 8    ; Datenzellen
 ```
 
-Groß-/Kleinschreibung spielt keine Rolle; Labels stehen am Zeilenanfang und enden mit `:`.
+Eine Zahl ohne `#` ist eine **Adresse** – für die Zahl 2 `#2` schreiben (`MOD 2` rechnet mit dem Inhalt
+von Zelle 2). Groß-/Kleinschreibung spielt keine Rolle; Labels stehen am Zeilenanfang und enden mit `:`.
 
 ## Bedienung
 
@@ -102,6 +123,9 @@ Groß-/Kleinschreibung spielt keine Rolle; Labels stehen am Zeilenanfang und end
 | **Pause / Reset** | Leertaste / Esc |
 | **Link** | kopiert eine Adresse, die das aktuelle Programm enthält |
 | **Beamer** | Präsentationsmodus (P) |
+
+Reiter links: **Programm** (Editor), **Speicher** (Zellen bearbeiten, Rückübersetzung der Befehle),
+**Befehle** (Befehlsreferenz), **Über** (Informationen zum Simulator).
 
 Das Programm wird außerdem im Browser gemerkt.
 
