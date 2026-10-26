@@ -54,6 +54,10 @@ The user interface is available in **English and German** (switch at the top rig
 Immediate values (`#n`) use opcode + 10. The flags are set by ADD, SUB, MUL, DIV, MOD and CMP,
 but not by LOAD (like `mov` on x86).
 
+**Rule of thumb:** put a `CMP` before every conditional jump – then it is clear what the jump refers to.
+Since arithmetic instructions also set the flags, the `CMP` can sometimes be omitted (e.g. `SUB #1`
+directly before `JG`, see the “Countdown” example); this saves an instruction but is easier to overlook.
+
 ### Assembler directive `DATA`
 
 `DATA` is not a machine instruction but a directive for the assembler: `name: DATA v1, v2, …`

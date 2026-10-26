@@ -87,7 +87,8 @@ b:      DATA  0
     title: { de: 'Countdown', en: 'Countdown' },
     source: {
       de: `; Zählt von n bis 1 herunter.
-; SUB setzt die Flags – deshalb ist hier kein CMP nötig.
+; Ausnahme von der Faustregel „vor jedem bedingten Sprung ein CMP“:
+; SUB setzt die Flags selbst, das CMP #0 kann entfallen und spart einen Befehl.
         IN    n
 schleife:
         OUT   n
@@ -100,7 +101,8 @@ schleife:
 n:      DATA  0
 `,
       en: `; Counts down from n to 1.
-; SUB sets the flags – that is why no CMP is needed here.
+; Exception to the rule of thumb "a CMP before every conditional jump":
+; SUB sets the flags itself, so CMP #0 can be omitted, saving one instruction.
         IN    n
 loop:
         OUT   n
@@ -226,7 +228,8 @@ befehl: ADD   liste     ; dieser Operand wird unten verändert
         LOAD  anzahl
         SUB   #1
         STORE anzahl
-        JG    schleife
+        CMP   #0
+        JG    schleife  ; weiter, solange anzahl > 0
         OUT   summe
         HALT
 
@@ -248,7 +251,8 @@ instr:  ADD   list      ; this operand is modified below
         LOAD  count
         SUB   #1
         STORE count
-        JG    loop
+        CMP   #0
+        JG    loop      ; continue while count > 0
         OUT   sum
         HALT
 

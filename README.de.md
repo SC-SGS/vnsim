@@ -53,6 +53,10 @@ Die Oberfläche gibt es auf **Deutsch und Englisch** (Umschalter oben rechts ode
 Direktwerte (`#n`) haben den Opcode + 10. Die Flags werden von ADD, SUB, MUL, DIV, MOD und CMP gesetzt,
 nicht von LOAD (wie `mov` bei x86).
 
+**Faustregel:** Vor jeden bedingten Sprung ein `CMP` setzen – dann ist klar, worauf sich der Sprung bezieht.
+Weil auch die Rechenbefehle die Flags setzen, kann das `CMP` manchmal entfallen (z. B. `SUB #1` direkt vor
+`JG`, siehe Beispiel „Countdown“); das spart einen Befehl, ist aber leichter zu übersehen.
+
 ### Assembler-Direktive `DATA`
 
 `DATA` ist kein Befehl der Maschine, sondern eine Anweisung an den Assembler: `name: DATA w1, w2, …`

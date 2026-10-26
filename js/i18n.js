@@ -238,6 +238,9 @@ Die Direktwert-Variante (<code>#n</code>) hat den Opcode + 10.</p>
 <p>Flags: <b>Z</b> (Ergebnis null) und <b>N</b> (Ergebnis negativ) werden von ADD, SUB, MUL, DIV, MOD und CMP gesetzt,
 nicht von LOAD. CMP berechnet Akku − Operand, ohne den Akku zu ändern.
 DIV und MOD rechnen wie <code>//</code> und <code>%</code> in Python.</p>
+<p><b>Faustregel:</b> Vor jeden bedingten Sprung (JE … JGE) ein CMP setzen – dann ist klar, worauf sich der
+Sprung bezieht. Weil auch die Rechenbefehle die Flags setzen, kann das CMP manchmal entfallen
+(z. B. <code>SUB #1</code> direkt vor <code>JG</code>); das spart einen Befehl, ist aber leichter zu übersehen.</p>
 <h2>Syntax</h2>
 <pre>; Kommentar
 start:  LOAD  #5      ; Direktwert
@@ -481,6 +484,9 @@ The immediate variant (<code>#n</code>) has opcode + 10.</p>
 <p>Flags: <b>Z</b> (result zero) and <b>N</b> (result negative) are set by ADD, SUB, MUL, DIV, MOD and CMP,
 but not by LOAD. CMP computes ACC − operand without changing the accumulator.
 DIV and MOD work like <code>//</code> and <code>%</code> in Python.</p>
+<p><b>Rule of thumb:</b> put a CMP before every conditional jump (JE … JGE) – then it is clear what the jump
+refers to. Since arithmetic instructions also set the flags, the CMP can sometimes be omitted
+(e.g. <code>SUB #1</code> directly before <code>JG</code>); this saves an instruction but is easier to overlook.</p>
 <h2>Syntax</h2>
 <pre>; comment
 start:  LOAD  #5      ; immediate value
