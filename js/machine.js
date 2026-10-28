@@ -159,7 +159,7 @@ var VN = (typeof VN !== 'undefined') ? VN : {};
         yield { type: 'phaseEnd', phase: 'decode' };
 
         // 3. FETCH OPERANDS – nur für Befehle, die einen Wert brauchen
-        const needsValue = ['load', 'alu', 'cmp', 'out'].includes(ins.kind);
+        const needsValue = ['load', 'alu', 'cmp'].includes(ins.kind);
         if (needsValue) {
           this.phase = 'operands';
           if (ins.operand === 'imm') {
@@ -256,30 +256,23 @@ var VN = (typeof VN !== 'undefined') ? VN : {};
             this.bus.ctrl = null;
             break;
           }
-          case 'in': {
-            const a = this.checkAddr(this.ir.arg, t('what.addr'));
+          case 'in':
             while (this.inputQueue.length === 0) {
               yield { type: 'wait', phase: this.phase, text: t('m.wait') };
             }
             this.inReg = this.checkValue(this.inputQueue.shift(), t('what.input'));
             yield this.micro(t('m.inToReg', { v: this.inReg }), { active: ['inReg'], value: this.inReg });
-            this.bus.addr = a;
-            this.bus.ctrl = 'write';
-            yield this.micro(t('m.addrToBus', { a: this.name(a) }),
-              { route: 'irArg>mem', value: a, bus: 'addr', active: ['irArg'], cell: a });
             this.bus.data = this.inReg;
-            this.writeMem(a, this.inReg);
-            yield this.micro(t('m.inToMem', { v: this.inReg, a }),
-              { route: 'in>mem', value: this.inReg, bus: 'data', active: ['inReg'], cell: a, write: true });
-            this.bus.ctrl = null;
+            this.acc = this.inReg;
+            yield this.micro(t('m.inToAcc', { v: this.acc }),
+              { route: 'in>acc', value: this.acc, bus: 'data', active: ['acc'] });
             break;
-          }
           case 'out':
-            this.outReg = this.opReg;
+            this.outReg = this.acc;
             this.outputs.push(this.outReg);
             this.bus.data = this.outReg;
-            yield this.micro(t('m.opToOut', { v: this.outReg }),
-              { route: 'opReg>out', value: this.outReg, bus: 'data', active: ['outReg'], output: true });
+            yield this.micro(t('m.accToOut', { v: this.outReg }),
+              { route: 'acc>out', value: this.outReg, bus: 'data', active: ['outReg'], output: true });
             break;
           default:
             wroteBack = false;

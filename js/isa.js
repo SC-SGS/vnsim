@@ -46,9 +46,8 @@ var VN = (typeof VN !== 'undefined') ? VN : {};
     { code: 24, mnemonic: 'JLE', operand: 'target', kind: 'jump', test: f => f.n || f.z },
     { code: 25, mnemonic: 'JG', operand: 'target', kind: 'jump', test: f => !f.n && !f.z },
     { code: 26, mnemonic: 'JGE', operand: 'target', kind: 'jump', test: f => !f.n },
-    { code: 30, mnemonic: 'IN', operand: 'addr', kind: 'in' },
-    { code: 31, mnemonic: 'OUT', operand: 'addr', kind: 'out' },
-    { code: 41, mnemonic: 'OUT', operand: 'imm', kind: 'out' },
+    { code: 30, mnemonic: 'IN', operand: 'none', kind: 'in' },
+    { code: 31, mnemonic: 'OUT', operand: 'none', kind: 'out' },
   ];
 
   const byCode = new Map(INSTRUCTIONS.map(ins => [ins.code, ins]));

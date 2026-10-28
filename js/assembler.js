@@ -132,7 +132,10 @@ var VN = (typeof VN !== 'undefined') ? VN : {};
       let ins = null;
       let value = 0;
       if (variants.none) {
-        if (args.length > 0) errors.push({ line, message: t('asm.noOperand', { m: mnemonic }) });
+        if (args.length > 0) {
+          const io = variants.none.kind === 'in' || variants.none.kind === 'out';
+          errors.push({ line, message: t(io ? 'asm.ioOperand' : 'asm.noOperand', { m: mnemonic }) });
+        }
         ins = variants.none;
       } else if (args.length !== 1) {
         errors.push({ line, message: t('asm.oneOperand', { m: mnemonic }) });

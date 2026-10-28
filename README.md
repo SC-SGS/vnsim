@@ -65,15 +65,17 @@ The user interface is available in **English and German** (switch at the top rig
 | 24 | `JLE target` | Jump if less or equal (N = 1 or Z = 1) |  |
 | 25 | `JG target` | Jump if greater (N = 0 and Z = 0) |  |
 | 26 | `JGE target` | Jump if greater or equal (N = 0) |  |
-| 30 | `IN x` | mem[x] ← input |  |
-| 31 | `OUT x` | output ← mem[x] |  |
-| 41 | `OUT #n` | output ← n |  |
+| 30 | `IN` | ACC ← input |  |
+| 31 | `OUT` | output ← ACC |  |
 
 ACC = accumulator, mem[x] = contents of cell x. DIV and MOD work like `//` and `%` in Python.
 HALT has opcode 00 – so empty memory halts immediately.
 
 Immediate values (`#n`) use opcode + 10. The flags are set by ADD, SUB, MUL, DIV, MOD and CMP,
-but not by LOAD (like `mov` on x86).
+but not by LOAD and IN (like `mov` on x86).
+
+**Input and output** go through the accumulator like all data: `IN` followed by `STORE x` stores an
+input value, `LOAD x` followed by `OUT` outputs a memory cell.
 
 **Rule of thumb:** put a `CMP` before every conditional jump – then it is clear what the jump refers to.
 Since arithmetic instructions also set the flags, the `CMP` can sometimes be omitted (e.g. `SUB #1`
@@ -88,14 +90,14 @@ is taken as an opcode.
 
 **Naming a memory cell:** `b: DATA 0` reserves the next free cell with initial value 0 and gives it
 the name `b`, similar to a variable. Afterwards you can write `b` instead of the address everywhere,
-e.g. `IN b`, `LOAD b`, `STORE b`; the assembler fills in the address.
+e.g. `LOAD b`, `STORE b`, `ADD b`; the assembler fills in the address.
 
 ### Colours in memory
 
 | Colour | Meaning |
 |---|---|
 | yellow | instruction (opcode, operand) – produced by the assembler or fetched as an instruction at run time |
-| blue | data – created with `DATA` or written at run time (`STORE`, `IN`) |
+| blue | data – created with `DATA` or written at run time (`STORE`) |
 | yellow with blue corner | program cell overwritten at run time (self-modifying code) |
 
 Bright yellow marks the access of the current micro step (red border when writing); a thick blue

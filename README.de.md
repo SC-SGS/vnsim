@@ -63,15 +63,17 @@ Die Oberfläche gibt es auf **Deutsch und Englisch** (Umschalter oben rechts ode
 | 24 | `JLE ziel` | Springe, wenn kleiner oder gleich (N = 1 oder Z = 1) |  |
 | 25 | `JG ziel` | Springe, wenn größer (N = 0 und Z = 0) |  |
 | 26 | `JGE ziel` | Springe, wenn größer oder gleich (N = 0) |  |
-| 30 | `IN x` | Speicher[x] ← Eingabe |  |
-| 31 | `OUT x` | Ausgabe ← Speicher[x] |  |
-| 41 | `OUT #n` | Ausgabe ← n |  |
+| 30 | `IN` | Akku ← Eingabe |  |
+| 31 | `OUT` | Ausgabe ← Akku |  |
 
 Akku = Akkumulator, Speicher[x] = Inhalt der Zelle x. DIV und MOD rechnen wie `//` und `%` in Python.
 HALT hat den Opcode 00 – leerer Speicher hält also sofort an.
 
 Direktwerte (`#n`) haben den Opcode + 10. Die Flags werden von ADD, SUB, MUL, DIV, MOD und CMP gesetzt,
-nicht von LOAD (wie `mov` bei x86).
+nicht von LOAD und IN (wie `mov` bei x86).
+
+**Ein- und Ausgabe** laufen wie alle Daten über den Akku: `IN` und dann `STORE x` speichert eine Eingabe,
+`LOAD x` und dann `OUT` gibt eine Speicherzelle aus.
 
 **Faustregel:** Vor jeden bedingten Sprung ein `CMP` setzen – dann ist klar, worauf sich der Sprung bezieht.
 Weil auch die Rechenbefehle die Flags setzen, kann das `CMP` manchmal entfallen (z. B. `SUB #1` direkt vor
@@ -86,14 +88,14 @@ als Opcode.
 
 **Speicherstelle benennen:** `b: DATA 0` reserviert die nächste freie Zelle mit dem Startwert 0 und gibt
 ihr den Namen `b`, ähnlich einer Variablen. Danach kann man überall `b` statt der Adresse schreiben,
-z. B. `IN b`, `LOAD b`, `STORE b`; der Assembler setzt die Adresse ein.
+z. B. `LOAD b`, `STORE b`, `ADD b`; der Assembler setzt die Adresse ein.
 
 ### Farben im Speicher
 
 | Farbe | Bedeutung |
 |---|---|
 | gelb | Befehl (Opcode, Operand) – vom Assembler erzeugt oder zur Laufzeit als Befehl geholt |
-| blau | Daten – mit `DATA` angelegt oder zur Laufzeit beschrieben (`STORE`, `IN`) |
+| blau | Daten – mit `DATA` angelegt oder zur Laufzeit beschrieben (`STORE`) |
 | gelb mit blauer Ecke | zur Laufzeit überschriebene Programmzelle (selbstmodifizierender Code) |
 
 Kräftig gelb ist der Zugriff im aktuellen Mikroschritt (roter Rahmen beim Schreiben); ein dicker blauer

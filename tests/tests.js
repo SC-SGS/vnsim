@@ -92,7 +92,7 @@ test('Beispiel selbstmodifizierende Liste', () => {
 });
 
 test('Flags nach CMP und bedingte Sprünge', () => {
-  const src = (j) => `LOAD #3\nCMP #5\n${j} ja\nOUT #0\nHALT\nja: OUT #1\nHALT`;
+  const src = (j) => `LOAD #3\nCMP #5\n${j} ja\nLOAD #0\nOUT\nHALT\nja: LOAD #1\nOUT\nHALT`;
   const expect = { JE: 0, JNE: 1, JL: 1, JLE: 1, JG: 0, JGE: 0 };
   for (const [j, out] of Object.entries(expect)) eq(run(src(j)).m.outputs, [out], j);
   const { m } = run('LOAD #3\nCMP #3\nHALT');
@@ -105,7 +105,7 @@ test('LOAD setzt keine Flags, SUB schon', () => {
 });
 
 test('DIV und MOD wie in Python (// und %)', () => {
-  eq(run('LOAD #-7\nDIV #2\nSTORE x\nOUT x\nLOAD #-7\nMOD #2\nSTORE x\nOUT x\nHALT\nx: DATA 0').m.outputs, [-4, 1]);
+  eq(run('LOAD #-7\nDIV #2\nOUT\nLOAD #-7\nMOD #2\nOUT\nHALT').m.outputs, [-4, 1]);
 });
 
 test('Laufzeitfehler: Division durch 0, unbekannter Opcode', () => {
@@ -120,12 +120,27 @@ test('Leerer Speicher hält sofort an (Opcode 0 = HALT)', () => {
 });
 
 test('IN wartet auf Eingabe', () => {
-  const prog = VN.assemble('IN x\nOUT x\nHALT\nx: DATA 0');
+  const prog = VN.assemble('IN\nOUT\nHALT');
   const m = new VN.Machine();
   m.load(prog.memory, prog.names);
   eq(m.runToEnd().type, 'wait');
   m.provideInput(42);
   eq(m.runToEnd(), null); eq(m.outputs, [42]);
+});
+
+test('IN und OUT arbeiten mit dem Akku, ohne Speicherzugriff und ohne Flags', () => {
+  const p = VN.assemble('IN\nOUT\nHALT');
+  eq(p.errors, []);
+  eq(p.memory.slice(0, 6), [30, 0, 31, 0, 0, 0]);
+  const { m } = run('LOAD #0\nSUB #1\nIN\nOUT\nHALT', [7]);
+  eq(m.acc, 7); eq(m.outputs, [7]); eq(m.flags, { z: false, n: true });
+  eq(m.counters.memAccess, 5 * 2);   // nur das Holen der fünf Befehle
+});
+
+test('IN/OUT mit Operand: Hinweis auf den Akku', () => {
+  const p = VN.assemble('IN x\nOUT #1\nHALT\nx: DATA 0');
+  eq(p.errors.map(e => e.line), [1, 2]);
+  ok(p.errors[0].message.includes('Akku'), p.errors[0].message);
 });
 
 test('Mikroschritte folgen den fünf Phasen', () => {

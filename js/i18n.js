@@ -33,9 +33,8 @@ var VN = (typeof VN !== 'undefined') ? VN : {};
       'ins.24': 'Springe, wenn kleiner oder gleich',
       'ins.25': 'Springe, wenn größer',
       'ins.26': 'Springe, wenn größer oder gleich (N = 0)',
-      'ins.30': 'Speicher[x] ← Eingabe',
-      'ins.31': 'Ausgabe ← Speicher[x]',
-      'ins.41': 'Ausgabe ← n',
+      'ins.30': 'Akku ← Eingabe',
+      'ins.31': 'Ausgabe ← Akku',
       'cond.21': 'Z = 1',
       'cond.22': 'Z = 0',
       'cond.23': 'N = 1',
@@ -54,6 +53,7 @@ var VN = (typeof VN !== 'undefined') ? VN : {};
       'asm.notInt': '„{arg}“ ist keine ganze Zahl.',
       'asm.valueRange': 'Wert {v} liegt außerhalb von {min} … {max}.',
       'asm.noOperand': '{m} erwartet keinen Operanden.',
+      'asm.ioOperand': '{m} erwartet keinen Operanden: IN liest in den Akku, OUT gibt den Akku aus (z. B. „IN“ und dann „STORE x“, „LOAD x“ und dann „OUT“).',
       'asm.oneOperand': '{m} erwartet genau einen Operanden.',
       'asm.noImm': '{m} erwartet eine Adresse, keinen Direktwert (#).',
       'asm.immNotInt': 'Direktwert „{arg}“ ist keine ganze Zahl.',
@@ -93,8 +93,8 @@ var VN = (typeof VN !== 'undefined') ? VN : {};
       'm.accToMem': 'Akku {v} → Datenbus → Speicher[{a}]',
       'm.wait': 'Warte auf Eingabe …',
       'm.inToReg': 'Eingabe {v} → Eingaberegister',
-      'm.inToMem': 'Eingaberegister {v} → Datenbus → Speicher[{a}]',
-      'm.opToOut': 'Operand {v} → Datenbus → Ausgaberegister',
+      'm.inToAcc': 'Eingaberegister {v} → Datenbus → Akku',
+      'm.accToOut': 'Akku {v} → Datenbus → Ausgaberegister',
       'bus.read': 'lesen',
       'bus.write': 'schreiben',
 
@@ -226,11 +226,11 @@ die Adresse der ersten Zelle. Die Maschine kennt DATA nicht – wird eine solche
 gilt ihr Wert als Opcode.</p>
 <p><b>Speicherstelle benennen:</b> <code>b: DATA 0</code> reserviert die nächste freie Zelle mit dem Startwert 0
 und gibt ihr den Namen <code>b</code>, ähnlich einer Variablen. Danach kann man überall <code>b</code> statt der
-Adresse schreiben, z. B. <code>IN b</code>, <code>LOAD b</code>, <code>STORE b</code>; der Assembler setzt die
+Adresse schreiben, z. B. <code>LOAD b</code>, <code>STORE b</code>, <code>ADD b</code>; der Assembler setzt die
 Adresse ein.</p>
 <h2>Farben im Speicher</h2>
 <p><b>Gelb</b>: Befehl (Opcode und Operand) – vom Assembler erzeugt oder zur Laufzeit als Befehl geholt.
-<b>Blau</b>: Daten – mit DATA angelegt oder zur Laufzeit beschrieben (STORE, IN).
+<b>Blau</b>: Daten – mit DATA angelegt oder zur Laufzeit beschrieben (STORE).
 <b>Gelb mit blauer Ecke</b>: Programmzelle, die zur Laufzeit überschrieben wurde (selbstmodifizierender Code).
 Reset stellt die Farben wie nach dem Assemblieren her.</p>
 <p>Zusätzlich: kräftig gelb = Zugriff im aktuellen Mikroschritt (roter Rahmen beim Schreiben),
@@ -240,8 +240,10 @@ dicker blauer Rahmen = Zelle, auf die der Befehlszähler zeigt, dünner blauer R
 Programm und Daten liegen im selben Speicher. Ein Befehl belegt zwei Zellen: Opcode und Operand.
 Die Direktwert-Variante (<code>#n</code>) hat den Opcode + 10.</p>
 <p>Flags: <b>Z</b> (Ergebnis null) und <b>N</b> (Ergebnis negativ) werden von ADD, SUB, MUL, DIV, MOD und CMP gesetzt,
-nicht von LOAD. CMP berechnet Akku − Operand, ohne den Akku zu ändern.
+nicht von LOAD und IN. CMP berechnet Akku − Operand, ohne den Akku zu ändern.
 DIV und MOD rechnen wie <code>//</code> und <code>%</code> in Python.</p>
+<p><b>Ein- und Ausgabe</b> laufen wie alle Daten über den Akku: <code>IN</code> und dann <code>STORE x</code>
+speichert eine Eingabe, <code>LOAD x</code> und dann <code>OUT</code> gibt eine Speicherzelle aus.</p>
 <p><b>Faustregel:</b> Vor jeden bedingten Sprung (JE … JGE) ein CMP setzen – dann ist klar, worauf sich der
 Sprung bezieht. Weil auch die Rechenbefehle die Flags setzen, kann das CMP manchmal entfallen
 (z. B. <code>SUB #1</code> direkt vor <code>JG</code>); das spart einen Befehl, ist aber leichter zu übersehen.</p>
@@ -287,9 +289,8 @@ oder innerhalb der CPU übertragen.</p>
       'ins.24': 'Jump if less or equal',
       'ins.25': 'Jump if greater',
       'ins.26': 'Jump if greater or equal (N = 0)',
-      'ins.30': 'mem[x] ← input',
-      'ins.31': 'output ← mem[x]',
-      'ins.41': 'output ← n',
+      'ins.30': 'ACC ← input',
+      'ins.31': 'output ← ACC',
       'cond.21': 'Z = 1',
       'cond.22': 'Z = 0',
       'cond.23': 'N = 1',
@@ -307,6 +308,7 @@ oder innerhalb der CPU übertragen.</p>
       'asm.notInt': '“{arg}” is not an integer.',
       'asm.valueRange': 'Value {v} is outside of {min} … {max}.',
       'asm.noOperand': '{m} takes no operand.',
+      'asm.ioOperand': '{m} takes no operand: IN reads into the accumulator, OUT outputs the accumulator (e.g. “IN” followed by “STORE x”, “LOAD x” followed by “OUT”).',
       'asm.oneOperand': '{m} expects exactly one operand.',
       'asm.noImm': '{m} expects an address, not an immediate value (#).',
       'asm.immNotInt': 'Immediate value “{arg}” is not an integer.',
@@ -345,8 +347,8 @@ oder innerhalb der CPU übertragen.</p>
       'm.accToMem': 'Accumulator {v} → data bus → mem[{a}]',
       'm.wait': 'Waiting for input …',
       'm.inToReg': 'Input {v} → input register',
-      'm.inToMem': 'Input register {v} → data bus → mem[{a}]',
-      'm.opToOut': 'Operand {v} → data bus → output register',
+      'm.inToAcc': 'Input register {v} → data bus → ACC',
+      'm.accToOut': 'ACC {v} → data bus → output register',
       'bus.read': 'read',
       'bus.write': 'write',
 
@@ -478,11 +480,11 @@ address of the first cell. The machine does not know DATA – if such a cell is 
 its value is taken as an opcode.</p>
 <p><b>Naming a memory cell:</b> <code>b: DATA 0</code> reserves the next free cell with initial value 0 and
 gives it the name <code>b</code>, similar to a variable. Afterwards you can write <code>b</code> instead of the
-address everywhere, e.g. <code>IN b</code>, <code>LOAD b</code>, <code>STORE b</code>; the assembler fills in
+address everywhere, e.g. <code>LOAD b</code>, <code>STORE b</code>, <code>ADD b</code>; the assembler fills in
 the address.</p>
 <h2>Colours in memory</h2>
 <p><b>Yellow</b>: instruction (opcode and operand) – produced by the assembler or fetched as an instruction at run time.
-<b>Blue</b>: data – created with DATA or written at run time (STORE, IN).
+<b>Blue</b>: data – created with DATA or written at run time (STORE).
 <b>Yellow with a blue corner</b>: program cell that was overwritten at run time (self-modifying code).
 Reset restores the colours as after assembling.</p>
 <p>In addition: bright yellow = access in the current micro step (red border when writing),
@@ -492,8 +494,10 @@ thick blue border = cell the program counter points to, thin blue border = curre
 Program and data share the same memory. An instruction occupies two cells: opcode and operand.
 The immediate variant (<code>#n</code>) has opcode + 10.</p>
 <p>Flags: <b>Z</b> (result zero) and <b>N</b> (result negative) are set by ADD, SUB, MUL, DIV, MOD and CMP,
-but not by LOAD. CMP computes ACC − operand without changing the accumulator.
+but not by LOAD and IN. CMP computes ACC − operand without changing the accumulator.
 DIV and MOD work like <code>//</code> and <code>%</code> in Python.</p>
+<p><b>Input and output</b> go through the accumulator like all data: <code>IN</code> followed by
+<code>STORE x</code> stores an input value, <code>LOAD x</code> followed by <code>OUT</code> outputs a memory cell.</p>
 <p><b>Rule of thumb:</b> put a CMP before every conditional jump (JE … JGE) – then it is clear what the jump
 refers to. Since arithmetic instructions also set the flags, the CMP can sometimes be omitted
 (e.g. <code>SUB #1</code> directly before <code>JG</code>); this saves an instruction but is easier to overlook.</p>

@@ -20,7 +20,7 @@ VN.EXAMPLES = [
         ADD   #5        ; Akku = 3 + 4 + 5
         MUL   h
         STORE x
-        OUT   x
+        OUT             ; Akku ausgeben
         HALT
 
 h:      DATA  0         ; Zwischenergebnis
@@ -40,7 +40,7 @@ x:      DATA  0
         ADD   #5        ; ACC = 3 + 4 + 5
         MUL   tmp
         STORE x
-        OUT   x
+        OUT             ; output ACC
         HALT
 
 tmp:    DATA  0         ; intermediate result
@@ -53,28 +53,32 @@ x:      DATA  0
     title: { de: 'Maximum zweier Zahlen', en: 'Maximum of two numbers' },
     source: {
       de: `; Gibt die größere von zwei eingegebenen Zahlen aus.
-        IN    a
-        IN    b
+        IN              ; Eingabe → Akku
+        STORE a
+        IN
+        STORE b
         LOAD  a
         CMP   b         ; Flags ← a - b
-        JGE   a_max     ; a - b >= 0  →  a ist größer oder gleich
-        OUT   b
-        HALT
-a_max:  OUT   a
+        JGE   ausgabe   ; a - b >= 0  →  a ist größer oder gleich, a steht schon im Akku
+        LOAD  b
+ausgabe:
+        OUT             ; Akku ausgeben
         HALT
 
 a:      DATA  0
 b:      DATA  0
 `,
       en: `; Outputs the larger of two input numbers.
-        IN    a
-        IN    b
+        IN              ; input → ACC
+        STORE a
+        IN
+        STORE b
         LOAD  a
         CMP   b         ; flags ← a - b
-        JGE   a_max     ; a - b >= 0  →  a is greater or equal
-        OUT   b
-        HALT
-a_max:  OUT   a
+        JGE   output    ; a - b >= 0  →  a is greater or equal, a is already in ACC
+        LOAD  b
+output:
+        OUT             ; output ACC
         HALT
 
 a:      DATA  0
@@ -86,33 +90,25 @@ b:      DATA  0
     id: 'countdown',
     title: { de: 'Countdown', en: 'Countdown' },
     source: {
-      de: `; Zählt von n bis 1 herunter.
+      de: `; Zählt von n bis 1 herunter – nur mit dem Akku, ganz ohne Datenzellen.
 ; Ausnahme von der Faustregel „vor jedem bedingten Sprung ein CMP“:
 ; SUB setzt die Flags selbst, das CMP #0 kann entfallen und spart einen Befehl.
-        IN    n
+        IN              ; Akku = n
 schleife:
-        OUT   n
-        LOAD  n
+        OUT
         SUB   #1
-        STORE n
-        JG    schleife  ; weiter, solange n > 0
+        JG    schleife  ; weiter, solange Akku > 0
         HALT
-
-n:      DATA  0
 `,
-      en: `; Counts down from n to 1.
+      en: `; Counts down from n to 1 – using only the accumulator, without any data cells.
 ; Exception to the rule of thumb "a CMP before every conditional jump":
 ; SUB sets the flags itself, so CMP #0 can be omitted, saving one instruction.
-        IN    n
+        IN              ; ACC = n
 loop:
-        OUT   n
-        LOAD  n
+        OUT
         SUB   #1
-        STORE n
-        JG    loop      ; continue while n > 0
+        JG    loop      ; continue while ACC > 0
         HALT
-
-n:      DATA  0
 `,
     },
   },
@@ -121,7 +117,8 @@ n:      DATA  0
     title: { de: 'Summe 1 + 2 + … + n', en: 'Sum 1 + 2 + … + n' },
     source: {
       de: `; Berechnet 1 + 2 + ... + n
-        IN    n
+        IN
+        STORE n
         LOAD  #0
         STORE summe
 schleife:
@@ -134,14 +131,16 @@ schleife:
         SUB   #1
         STORE n
         JMP   schleife
-ende:   OUT   summe
+ende:   LOAD  summe
+        OUT
         HALT
 
 n:      DATA  0
 summe:  DATA  0
 `,
       en: `; Computes 1 + 2 + ... + n
-        IN    n
+        IN
+        STORE n
         LOAD  #0
         STORE sum
 loop:
@@ -154,7 +153,8 @@ loop:
         SUB   #1
         STORE n
         JMP   loop
-done:   OUT   sum
+done:   LOAD  sum
+        OUT
         HALT
 
 n:      DATA  0
@@ -168,7 +168,8 @@ sum:    DATA  0
     source: {
       de: `; Berechnet n! = 1 · 2 · ... · n
 ; Ab n = 8 wird der Zahlenbereich (-9999 … 9999) überschritten.
-        IN    n
+        IN
+        STORE n
         LOAD  #1
         STORE f
 schleife:
@@ -181,7 +182,8 @@ schleife:
         SUB   #1
         STORE n
         JMP   schleife
-ende:   OUT   f
+ende:   LOAD  f
+        OUT
         HALT
 
 n:      DATA  0
@@ -189,7 +191,8 @@ f:      DATA  1
 `,
       en: `; Computes n! = 1 · 2 · ... · n
 ; From n = 8 on, the number range (-9999 … 9999) is exceeded.
-        IN    n
+        IN
+        STORE n
         LOAD  #1
         STORE f
 loop:
@@ -202,7 +205,8 @@ loop:
         SUB   #1
         STORE n
         JMP   loop
-done:   OUT   f
+done:   LOAD  f
+        OUT
         HALT
 
 n:      DATA  0
@@ -230,7 +234,8 @@ befehl: ADD   liste     ; dieser Operand wird unten verändert
         STORE anzahl
         CMP   #0
         JG    schleife  ; weiter, solange anzahl > 0
-        OUT   summe
+        LOAD  summe
+        OUT
         HALT
 
 anzahl: DATA  5
@@ -253,7 +258,8 @@ instr:  ADD   list      ; this operand is modified below
         STORE count
         CMP   #0
         JG    loop      ; continue while count > 0
-        OUT   sum
+        LOAD  sum
+        OUT
         HALT
 
 count:  DATA  5
