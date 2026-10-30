@@ -1,10 +1,10 @@
-// Sprachumschaltung Deutsch/Englisch: VN.t('schluessel', {platzhalter: wert})
+// Sprachumschaltung (Deutsch, Englisch, Französisch, Spanisch): VN.t('schluessel', {platzhalter: wert})
 var VN = (typeof VN !== 'undefined') ? VN : {};
 
 (function (VN) {
   'use strict';
 
-  const LANGS = ['de', 'en'];
+  const LANGS = ['de', 'en', 'fr', 'es'];
   const STORAGE_KEY = 'vnsim-lang';
 
   const messages = {
@@ -518,6 +518,514 @@ over a bus or within the CPU.</p>
 <h2>Keyboard</h2>
 <p>F5 start/continue · Space pause · F10 step · Esc reset · P presentation mode</p>`,
     },
+    fr: {
+      'ins.0': 'Arrêter le programme',
+      'ins.1': 'ACC ← mém[x]',
+      'ins.11': 'ACC ← n',
+      'ins.2': 'mém[x] ← ACC',
+      'ins.3': 'ACC ← ACC + mém[x]',
+      'ins.13': 'ACC ← ACC + n',
+      'ins.4': 'ACC ← ACC − mém[x]',
+      'ins.14': 'ACC ← ACC − n',
+      'ins.5': 'ACC ← ACC · mém[x]',
+      'ins.15': 'ACC ← ACC · n',
+      'ins.6': 'ACC ← ACC // mém[x]',
+      'ins.16': 'ACC ← ACC // n',
+      'ins.7': 'ACC ← ACC % mém[x]',
+      'ins.17': 'ACC ← ACC % n',
+      'ins.8': 'Flags ← ACC − mém[x] (ACC inchangé)',
+      'ins.18': 'Flags ← ACC − n (ACC inchangé)',
+      'ins.20': 'Sauter toujours',
+      'ins.21': 'Sauter si égal (Z = 1)',
+      'ins.22': 'Sauter si différent (Z = 0)',
+      'ins.23': 'Sauter si inférieur (N = 1)',
+      'ins.24': 'Sauter si inférieur ou égal',
+      'ins.25': 'Sauter si supérieur',
+      'ins.26': 'Sauter si supérieur ou égal (N = 0)',
+      'ins.30': 'ACC ← entrée',
+      'ins.31': 'sortie ← ACC',
+      'cond.21': 'Z = 1',
+      'cond.22': 'Z = 0',
+      'cond.23': 'N = 1',
+      'cond.24': 'N = 1 ou Z = 1',
+      'cond.25': 'N = 0 et Z = 0',
+      'cond.26': 'N = 0',
+
+      'asm.mnemonicLabel': '« {name} » est un nom d’instruction et ne peut pas servir d’étiquette.',
+      'asm.dupLabel': 'L’étiquette « {name} » est déjà définie.',
+      'asm.dataArgs': 'DATA attend une ou plusieurs valeurs, p. ex. « DATA 0 » ou « DATA 1, 2, 3 ».',
+      'asm.unknown': 'Instruction inconnue « {m} ».',
+      'asm.tooBig': 'Programme trop grand : {n} cellules mémoire nécessaires, seulement {max} disponibles.',
+      'asm.undefLabel': 'L’étiquette « {name} » n’est pas définie.',
+      'asm.badOperand': '« {arg} » n’est ni une adresse valide ni une étiquette.',
+      'asm.notInt': '« {arg} » n’est pas un nombre entier.',
+      'asm.valueRange': 'La valeur {v} est hors de l’intervalle {min} … {max}.',
+      'asm.noOperand': '{m} n’attend pas d’opérande.',
+      'asm.ioOperand': '{m} n’attend pas d’opérande : IN lit dans l’accumulateur, OUT affiche l’accumulateur (p. ex. « IN » puis « STORE x », « LOAD x » puis « OUT »).',
+      'asm.oneOperand': '{m} attend exactement un opérande.',
+      'asm.noImm': '{m} attend une adresse, pas une valeur immédiate (#).',
+      'asm.immNotInt': 'La valeur immédiate « {arg} » n’est pas un nombre entier.',
+      'asm.immRange': 'La valeur immédiate {v} est hors de l’intervalle {min} … {max}.',
+      'outOfMem': '{what} {v} est en dehors de la mémoire (0 … {max}).',
+      'what.addr': 'Adresse',
+      'what.target': 'Cible du saut',
+      'what.pc': 'Compteur ordinal',
+      'what.result': 'résultat',
+      'what.input': 'entrée',
+
+      'phase.fetch': 'chercher l’instruction',
+      'phase.decode': 'décoder l’instruction',
+      'phase.operands': 'charger les opérandes',
+      'phase.execute': 'exécuter l’instruction',
+      'phase.writeback': 'réécrire le résultat',
+      'm.overflow': 'Dépassement : {what} {v} est hors de l’intervalle {min} … {max}.',
+      'm.pcToBus': 'Compteur ordinal {pc} → bus d’adresses',
+      'm.fetchToIr': 'mém[{a}] = {v} → bus de données → registre d’instruction ({part})',
+      'm.pcInc': 'Incrémenter le compteur ordinal → {pc}',
+      'm.badOpcode': 'Opcode inconnu {op} à l’adresse {a} – y a-t-il une donnée au lieu d’une instruction ?',
+      'm.decode': 'Décodeur d’instructions : {op} est {m} – {text}',
+      'm.immToOp': 'Valeur immédiate {v} → registre d’opérande',
+      'm.addrToBus': 'Adresse {a} → bus d’adresses',
+      'm.memToOp': 'mém[{a}] = {v} → bus de données → registre d’opérande',
+      'm.halt': 'HALT : programme terminé.',
+      'm.div0': 'Division par zéro ({m}).',
+      'm.cmp': 'L’UAL compare : {a} − {b} = {r} → flags {flags}',
+      'm.alu': 'L’UAL calcule : {a} {op} {b} = {r} → flags {flags}',
+      'm.condMet': 'Condition {cond} remplie',
+      'm.always': 'Saut inconditionnel',
+      'm.jump': '{why} : cible du saut {t} → compteur ordinal',
+      'm.noJump': 'Condition {cond} non remplie : pas de saut, le compteur ordinal reste {pc}',
+      'm.resToAcc': 'Résultat {v} → accumulateur',
+      'm.opToAcc': 'Opérande {v} → accumulateur',
+      'm.accToMem': 'Accumulateur {v} → bus de données → mém[{a}]',
+      'm.wait': 'En attente d’une entrée …',
+      'm.inToReg': 'Entrée {v} → registre d’entrée',
+      'm.inToAcc': 'Registre d’entrée {v} → bus de données → ACC',
+      'm.accToOut': 'ACC {v} → bus de données → registre de sortie',
+      'bus.read': 'lire',
+      'bus.write': 'écrire',
+
+      'v.arith': 'Unité arithmétique',
+      'v.control': 'Unité de contrôle',
+      'v.memory': 'Mémoire',
+      'v.io': 'Entrées/Sorties',
+      'v.acc': 'Accumulateur',
+      'v.opReg': 'Opérande',
+      'v.result': 'Résultat',
+      'v.decoder': 'Décodeur d’instructions',
+      'v.pc': 'Compteur ordinal',
+      'v.ir': 'Registre d’instruction',
+      'v.in': 'Entrée',
+      'v.out': 'Sortie',
+      'v.outputs': 'Sorties précédentes',
+      'v.program': 'Programme',
+      'v.data': 'Données',
+      'v.modified': 'modifié',
+      'v.modifiedTip': 'Cellule de programme écrasée à l’exécution',
+      'v.dataBus': 'Bus de données',
+      'v.addrBus': 'Bus d’adresses',
+      'v.ctrlBus': 'Bus de contrôle',
+      'v.cellTip': 'Adresse {a} : {v}',
+      'v.clickEdit': 'Cliquer pour modifier',
+
+      'ui.title': 'VNSim – Simulateur de von Neumann',
+      'ui.subtitle': 'Simulateur de von Neumann',
+      'ui.run': '▶ Démarrer',
+      'ui.continue': '▶ Continuer',
+      'ui.run.title': 'Démarrer / continuer (F5)',
+      'ui.pause': '❚❚ Pause',
+      'ui.pause.title': 'Pause (espace)',
+      'ui.step': '⏭ Pas',
+      'ui.step.title': 'Exécuter un pas (F10)',
+      'ui.reset': '⟲ Réinit.',
+      'ui.reset.title': 'Réinitialiser (Échap)',
+      'ui.controls': 'Exécution',
+      'ui.granularity': 'Pas',
+      'ui.gran.micro': 'Micro-étape',
+      'ui.gran.phase': 'Phase',
+      'ui.gran.instr': 'Instruction',
+      'ui.speed': 'Vitesse',
+      'ui.anim': 'Animation',
+      'ui.numbers': 'Nombres',
+      'ui.fmt.dec': 'décimal',
+      'ui.fmt.hex': 'hexa',
+      'ui.fmt.bin': 'binaire',
+      'ui.examples': 'Exemples …',
+      'ui.examples.title': 'Charger un programme d’exemple',
+      'ui.open': 'Ouvrir',
+      'ui.open.title': 'Charger un programme depuis un fichier',
+      'ui.save': 'Enregistrer',
+      'ui.save.title': 'Enregistrer le programme dans un fichier',
+      'ui.link': 'Lien',
+      'ui.link.title': 'Copier un lien vers ce programme dans le presse-papiers',
+      'ui.present': 'Présenter',
+      'ui.present.title': 'Mode présentation (P)',
+      'ui.lang.title': 'Langue / Language',
+      'ui.tab.program': 'Programme',
+      'ui.tab.memory': 'Mémoire',
+      'ui.tab.help': 'Instructions',
+      'ui.tab.about': 'À propos',
+      'ui.source': 'Code source assembleur',
+      'ui.memHint': 'Modifier les valeurs directement : programme et données partagent la même mémoire.',
+      'ui.memAddr': 'Adr.',
+      'ui.memValue': 'Valeur',
+      'ui.memMeaning': 'Signification',
+      'ui.svg': 'Schéma de l’ordinateur de von Neumann',
+      'ui.input': 'Entrée',
+      'ui.cntInstr': 'Instructions',
+      'ui.cntSteps': 'Cycles',
+      'ui.cntMem': 'Accès mémoire',
+      'ui.fileName': 'programme.vns',
+
+      'st.ready': 'Prêt',
+      'st.readyText': 'Écrire un programme ou choisir un exemple, puis ▶ Démarrer.',
+      'st.error': 'Erreur',
+      'st.errLine': 'Ligne {line} : {msg}',
+      'st.more': ' (et {n} autres)',
+      'st.running': 'En cours',
+      'st.runningText': 'Exécution du programme …',
+      'st.stopped': 'Arrêté',
+      'st.limit': 'Plus de {n} cycles – une boucle infinie ? ▶ pour continuer.',
+      'st.stoppedText': 'Arrêté.',
+      'st.done': 'Terminé',
+      'st.doneText': 'Programme terminé : {i} instructions, {s} cycles, {m} accès mémoire.',
+      'st.output': ' Sortie : {list}',
+      'st.runtimeError': 'Erreur d’exécution',
+      'st.input': 'Entrée',
+      'st.inputText': 'IN : saisir un nombre entier et valider avec Entrée.',
+      'st.inputInvalid': 'Saisir un nombre entier de {min} à {max}.',
+      'st.pause': 'Pause',
+      'st.pauseText': 'En pause. ▶ continue, ⏭ avance pas à pas.',
+      'st.resetText': 'Réinitialisé. ▶ Démarrer ou ⏭ Pas.',
+      'st.loaded': 'Programme chargé. ▶ Démarrer ou ⏭ Pas.',
+      'st.changed': 'Programme modifié – ▶ Démarrer le recharge.',
+      'st.memory': 'Mémoire',
+      'st.memInvalid': 'Valeur invalide pour la cellule {a} : nombres entiers de {min} à {max} autorisés.',
+      'st.memSet': 'Cellule {a} ← {v}',
+      'st.asInstr': ' (comme instruction : {m})',
+      'st.link': 'Lien',
+      'st.linkCopied': 'Lien vers le programme copié dans le presse-papiers.',
+      'st.linkPrompt': 'Lien à copier :',
+      'err.line': 'Ligne {line} :',
+      'mem.cell': 'Cellule mémoire {a}',
+      'mem.noInstr': '? pas une instruction',
+      'mem.data': 'Données',
+
+      'about.html': `
+<h2>VNSim – Simulateur de von Neumann</h2>
+<p>Simulateur d’un ordinateur de von Neumann simple à accumulateur : programme et données partagent la même
+mémoire, et chaque instruction parcourt visiblement les phases Fetch, Decode, Fetch Operands, Execute et Write Back.</p>
+<p>Développé pour le cours « Informatik für Ingenieurwissenschaften » (informatique pour ingénieurs)
+à l’Université de Stuttgart.</p>
+<p>Auteur : Dirk Pflüger<br>
+Code source : <a href="https://github.com/SC-SGS/vnsim" target="_blank" rel="noopener">github.com/SC-SGS/vnsim</a><br>
+Licence : MIT<br>
+Police : TeX Gyre Heros (GUST Font License)</p>`,
+      'help.target': 'cible',
+      'help.html': `
+<h2>Jeu d’instructions</h2>
+<table><thead><tr><th>Code</th><th>Instruction</th><th>Effet</th><th>modifie</th></tr></thead><tbody>{rows}</tbody></table>
+<p>ACC = accumulateur, mém[x] = cellule mémoire x.</p>
+<h2>Directive d’assemblage DATA</h2>
+<p><code>DATA</code> n’est pas une instruction de la machine mais une directive pour l’assembleur :
+<code>nom: DATA v1, v2, …</code> place les valeurs dans les cellules mémoire libres suivantes ; <code>nom</code>
+est l’adresse de la première cellule. La machine ne connaît pas DATA – si une telle cellule est exécutée comme
+instruction, sa valeur est interprétée comme opcode.</p>
+<p><b>Nommer une cellule mémoire :</b> <code>b: DATA 0</code> réserve la cellule libre suivante avec la valeur
+initiale 0 et lui donne le nom <code>b</code>, comme une variable. Ensuite, on peut écrire <code>b</code> au lieu
+de l’adresse partout, p. ex. <code>LOAD b</code>, <code>STORE b</code>, <code>ADD b</code> ; l’assembleur
+insère l’adresse.</p>
+<h2>Couleurs dans la mémoire</h2>
+<p><b>Jaune</b> : instruction (opcode et opérande) – produite par l’assembleur ou lue comme instruction à l’exécution.
+<b>Bleu</b> : données – créées avec DATA ou écrites à l’exécution (STORE).
+<b>Jaune avec un coin bleu</b> : cellule de programme écrasée à l’exécution (code auto-modifiant).
+Réinitialiser rétablit les couleurs d’après l’assemblage.</p>
+<p>De plus : jaune vif = accès de la micro-étape en cours (bordure rouge en écriture),
+bordure bleue épaisse = cellule pointée par le compteur ordinal, bordure bleue fine = instruction en cours.</p>
+<h2>Mémoire et nombres</h2>
+<p>{size} cellules (adresses 0 … {last}), chacune contenant un nombre entier de {min} à {max}.
+Programme et données partagent la même mémoire. Une instruction occupe deux cellules : opcode et opérande.
+La variante immédiate (<code>#n</code>) a l’opcode + 10.</p>
+<p>Flags : <b>Z</b> (résultat nul) et <b>N</b> (résultat négatif) sont positionnés par ADD, SUB, MUL, DIV, MOD
+et CMP, mais pas par LOAD ni IN. CMP calcule ACC − opérande sans modifier l’accumulateur.
+DIV et MOD fonctionnent comme <code>//</code> et <code>%</code> en Python.</p>
+<p><b>Les entrées et sorties</b> passent par l’accumulateur comme toutes les données : <code>IN</code> puis
+<code>STORE x</code> enregistre une valeur saisie, <code>LOAD x</code> puis <code>OUT</code> affiche une cellule mémoire.</p>
+<p><b>Règle pratique :</b> placer un CMP avant chaque saut conditionnel (JE … JGE) – on voit alors clairement
+à quoi le saut se rapporte. Comme les instructions arithmétiques positionnent aussi les flags, le CMP peut
+parfois être omis (p. ex. <code>SUB #1</code> juste avant <code>JG</code>) ; cela économise une instruction,
+mais passe plus facilement inaperçu.</p>
+<h2>Syntaxe</h2>
+<pre>; commentaire
+debut:  LOAD  #5      ; valeur immédiate
+        ADD   x       ; valeur à l’adresse x
+        STORE 42      ; adresse sous forme de nombre
+        JMP   debut   ; cible du saut
+x:      DATA  7       ; cellule(s) de données : DATA 1, 2, 3</pre>
+<p>Un nombre sans <code>#</code> est une <b>adresse</b> – écrire <code>#2</code> pour le nombre 2
+(<code>MOD 2</code> utilise le contenu de la cellule 2).</p>
+<p>Les étiquettes commencent une ligne et se terminent par <code>:</code>. <code>x+1</code> désigne la cellule
+après <code>x</code>. Majuscules et minuscules sont équivalentes.</p>
+<h2>Cycle d’instruction</h2>
+<p>{phases}. Chaque phase se compose de micro-étapes (cycles d’horloge) ; à chaque cycle, une valeur est
+transférée sur un bus ou à l’intérieur du processeur.</p>
+<h2>Clavier</h2>
+<p>F5 démarrer/continuer · Espace pause · F10 pas · Échap réinitialiser · P mode présentation</p>`,
+    },
+    es: {
+      'ins.0': 'Detener el programa',
+      'ins.1': 'ACC ← mem[x]',
+      'ins.11': 'ACC ← n',
+      'ins.2': 'mem[x] ← ACC',
+      'ins.3': 'ACC ← ACC + mem[x]',
+      'ins.13': 'ACC ← ACC + n',
+      'ins.4': 'ACC ← ACC − mem[x]',
+      'ins.14': 'ACC ← ACC − n',
+      'ins.5': 'ACC ← ACC · mem[x]',
+      'ins.15': 'ACC ← ACC · n',
+      'ins.6': 'ACC ← ACC // mem[x]',
+      'ins.16': 'ACC ← ACC // n',
+      'ins.7': 'ACC ← ACC % mem[x]',
+      'ins.17': 'ACC ← ACC % n',
+      'ins.8': 'Flags ← ACC − mem[x] (ACC sin cambios)',
+      'ins.18': 'Flags ← ACC − n (ACC sin cambios)',
+      'ins.20': 'Saltar siempre',
+      'ins.21': 'Saltar si igual (Z = 1)',
+      'ins.22': 'Saltar si distinto (Z = 0)',
+      'ins.23': 'Saltar si menor (N = 1)',
+      'ins.24': 'Saltar si menor o igual',
+      'ins.25': 'Saltar si mayor',
+      'ins.26': 'Saltar si mayor o igual (N = 0)',
+      'ins.30': 'ACC ← entrada',
+      'ins.31': 'salida ← ACC',
+      'cond.21': 'Z = 1',
+      'cond.22': 'Z = 0',
+      'cond.23': 'N = 1',
+      'cond.24': 'N = 1 o Z = 1',
+      'cond.25': 'N = 0 y Z = 0',
+      'cond.26': 'N = 0',
+
+      'asm.mnemonicLabel': '«{name}» es un nombre de instrucción y no puede usarse como etiqueta.',
+      'asm.dupLabel': 'La etiqueta «{name}» ya está definida.',
+      'asm.dataArgs': 'DATA espera uno o más valores, p. ej. «DATA 0» o «DATA 1, 2, 3».',
+      'asm.unknown': 'Instrucción desconocida «{m}».',
+      'asm.tooBig': 'Programa demasiado grande: necesita {n} celdas de memoria, solo hay {max}.',
+      'asm.undefLabel': 'La etiqueta «{name}» no está definida.',
+      'asm.badOperand': '«{arg}» no es una dirección válida ni una etiqueta.',
+      'asm.notInt': '«{arg}» no es un número entero.',
+      'asm.valueRange': 'El valor {v} está fuera de {min} … {max}.',
+      'asm.noOperand': '{m} no lleva operando.',
+      'asm.ioOperand': '{m} no lleva operando: IN lee en el acumulador, OUT muestra el acumulador (p. ej. «IN» y luego «STORE x», «LOAD x» y luego «OUT»).',
+      'asm.oneOperand': '{m} espera exactamente un operando.',
+      'asm.noImm': '{m} espera una dirección, no un valor inmediato (#).',
+      'asm.immNotInt': 'El valor inmediato «{arg}» no es un número entero.',
+      'asm.immRange': 'El valor inmediato {v} está fuera de {min} … {max}.',
+      'outOfMem': '{what} {v} está fuera de la memoria (0 … {max}).',
+      'what.addr': 'Dirección',
+      'what.target': 'Destino del salto',
+      'what.pc': 'Contador de programa',
+      'what.result': 'resultado',
+      'what.input': 'entrada',
+
+      'phase.fetch': 'buscar la instrucción',
+      'phase.decode': 'decodificar la instrucción',
+      'phase.operands': 'cargar los operandos',
+      'phase.execute': 'ejecutar la instrucción',
+      'phase.writeback': 'escribir el resultado',
+      'm.overflow': 'Desbordamiento: {what} {v} está fuera de {min} … {max}.',
+      'm.pcToBus': 'Contador de programa {pc} → bus de direcciones',
+      'm.fetchToIr': 'mem[{a}] = {v} → bus de datos → registro de instrucción ({part})',
+      'm.pcInc': 'Incrementar el contador de programa → {pc}',
+      'm.badOpcode': 'Opcode desconocido {op} en la dirección {a}: ¿hay un dato en lugar de una instrucción?',
+      'm.decode': 'Decodificador de instrucciones: {op} es {m} – {text}',
+      'm.immToOp': 'Valor inmediato {v} → registro de operando',
+      'm.addrToBus': 'Dirección {a} → bus de direcciones',
+      'm.memToOp': 'mem[{a}] = {v} → bus de datos → registro de operando',
+      'm.halt': 'HALT: programa terminado.',
+      'm.div0': 'División por cero ({m}).',
+      'm.cmp': 'La ALU compara: {a} − {b} = {r} → flags {flags}',
+      'm.alu': 'La ALU calcula: {a} {op} {b} = {r} → flags {flags}',
+      'm.condMet': 'Condición {cond} cumplida',
+      'm.always': 'Salto incondicional',
+      'm.jump': '{why}: destino del salto {t} → contador de programa',
+      'm.noJump': 'Condición {cond} no cumplida: no hay salto, el contador de programa sigue en {pc}',
+      'm.resToAcc': 'Resultado {v} → acumulador',
+      'm.opToAcc': 'Operando {v} → acumulador',
+      'm.accToMem': 'Acumulador {v} → bus de datos → mem[{a}]',
+      'm.wait': 'Esperando una entrada …',
+      'm.inToReg': 'Entrada {v} → registro de entrada',
+      'm.inToAcc': 'Registro de entrada {v} → bus de datos → ACC',
+      'm.accToOut': 'ACC {v} → bus de datos → registro de salida',
+      'bus.read': 'leer',
+      'bus.write': 'escribir',
+
+      'v.arith': 'Unidad aritmética',
+      'v.control': 'Unidad de control',
+      'v.memory': 'Memoria',
+      'v.io': 'Entrada/Salida',
+      'v.acc': 'Acumulador',
+      'v.opReg': 'Operando',
+      'v.result': 'Resultado',
+      'v.decoder': 'Decodificador de instrucciones',
+      'v.pc': 'Contador de programa',
+      'v.ir': 'Registro de instrucción',
+      'v.in': 'Entrada',
+      'v.out': 'Salida',
+      'v.outputs': 'Salidas anteriores',
+      'v.program': 'Programa',
+      'v.data': 'Datos',
+      'v.modified': 'modificado',
+      'v.modifiedTip': 'Celda de programa sobrescrita durante la ejecución',
+      'v.dataBus': 'Bus de datos',
+      'v.addrBus': 'Bus de direcciones',
+      'v.ctrlBus': 'Bus de control',
+      'v.cellTip': 'Dirección {a}: {v}',
+      'v.clickEdit': 'Clic para editar',
+
+      'ui.title': 'VNSim – Simulador de von Neumann',
+      'ui.subtitle': 'Simulador de von Neumann',
+      'ui.run': '▶ Iniciar',
+      'ui.continue': '▶ Seguir',
+      'ui.run.title': 'Iniciar / continuar (F5)',
+      'ui.pause': '❚❚ Pausa',
+      'ui.pause.title': 'Pausa (espacio)',
+      'ui.step': '⏭ Paso',
+      'ui.step.title': 'Ejecutar un paso (F10)',
+      'ui.reset': '⟲ Reiniciar',
+      'ui.reset.title': 'Reiniciar (Esc)',
+      'ui.controls': 'Ejecución',
+      'ui.granularity': 'Avance',
+      'ui.gran.micro': 'Micropaso',
+      'ui.gran.phase': 'Fase',
+      'ui.gran.instr': 'Instrucción',
+      'ui.speed': 'Ritmo',
+      'ui.anim': 'Animación',
+      'ui.numbers': 'Números',
+      'ui.fmt.dec': 'decimal',
+      'ui.fmt.hex': 'hex',
+      'ui.fmt.bin': 'binario',
+      'ui.examples': 'Ejemplos …',
+      'ui.examples.title': 'Cargar un programa de ejemplo',
+      'ui.open': 'Abrir',
+      'ui.open.title': 'Cargar programa desde un archivo',
+      'ui.save': 'Guardar',
+      'ui.save.title': 'Guardar el programa en un archivo',
+      'ui.link': 'Enlace',
+      'ui.link.title': 'Copiar un enlace a este programa al portapapeles',
+      'ui.present': 'Presentar',
+      'ui.present.title': 'Modo presentación (P)',
+      'ui.lang.title': 'Idioma / Language',
+      'ui.tab.program': 'Programa',
+      'ui.tab.memory': 'Memoria',
+      'ui.tab.help': 'Instrucciones',
+      'ui.tab.about': 'Acerca de',
+      'ui.source': 'Código fuente en ensamblador',
+      'ui.memHint': 'Editar los valores directamente: programa y datos comparten la misma memoria.',
+      'ui.memAddr': 'Dir.',
+      'ui.memValue': 'Valor',
+      'ui.memMeaning': 'Significado',
+      'ui.svg': 'Esquema del ordenador de von Neumann',
+      'ui.input': 'Entrada',
+      'ui.cntInstr': 'Instrucciones',
+      'ui.cntSteps': 'Ciclos',
+      'ui.cntMem': 'Accesos a memoria',
+      'ui.fileName': 'programa.vns',
+
+      'st.ready': 'Listo',
+      'st.readyText': 'Escribir un programa o elegir un ejemplo y pulsar ▶ Iniciar.',
+      'st.error': 'Error',
+      'st.errLine': 'Línea {line}: {msg}',
+      'st.more': ' (y {n} más)',
+      'st.running': 'En ejecución',
+      'st.runningText': 'Ejecutando el programa …',
+      'st.stopped': 'Detenido',
+      'st.limit': 'Más de {n} ciclos: ¿un bucle infinito? Pulsar ▶ para continuar.',
+      'st.stoppedText': 'Detenido.',
+      'st.done': 'Terminado',
+      'st.doneText': 'Programa terminado: {i} instrucciones, {s} ciclos, {m} accesos a memoria.',
+      'st.output': ' Salida: {list}',
+      'st.runtimeError': 'Error de ejecución',
+      'st.input': 'Entrada',
+      'st.inputText': 'IN: introducir un número entero y confirmar con Intro.',
+      'st.inputInvalid': 'Introducir un número entero de {min} a {max}.',
+      'st.pause': 'Pausa',
+      'st.pauseText': 'En pausa. ▶ continúa, ⏭ avanza paso a paso.',
+      'st.resetText': 'Reiniciado. ▶ Iniciar o ⏭ Paso.',
+      'st.loaded': 'Programa cargado. ▶ Iniciar o ⏭ Paso.',
+      'st.changed': 'Programa modificado: ▶ Iniciar lo vuelve a cargar.',
+      'st.memory': 'Memoria',
+      'st.memInvalid': 'Valor no válido para la celda {a}: se admiten números enteros de {min} a {max}.',
+      'st.memSet': 'Celda {a} ← {v}',
+      'st.asInstr': ' (como instrucción: {m})',
+      'st.link': 'Enlace',
+      'st.linkCopied': 'Enlace al programa copiado al portapapeles.',
+      'st.linkPrompt': 'Enlace para copiar:',
+      'err.line': 'Línea {line}:',
+      'mem.cell': 'Celda de memoria {a}',
+      'mem.noInstr': '? no es una instrucción',
+      'mem.data': 'Datos',
+
+      'about.html': `
+<h2>VNSim – Simulador de von Neumann</h2>
+<p>Simulador de un ordenador de von Neumann sencillo con acumulador: programa y datos comparten la misma
+memoria, y cada instrucción recorre de forma visible las fases Fetch, Decode, Fetch Operands, Execute y Write Back.</p>
+<p>Desarrollado para la asignatura «Informatik für Ingenieurwissenschaften» (Informática para ingenieros)
+en la Universidad de Stuttgart.</p>
+<p>Autor: Dirk Pflüger<br>
+Código fuente: <a href="https://github.com/SC-SGS/vnsim" target="_blank" rel="noopener">github.com/SC-SGS/vnsim</a><br>
+Licencia: MIT<br>
+Tipografía: TeX Gyre Heros (GUST Font License)</p>`,
+      'help.target': 'destino',
+      'help.html': `
+<h2>Conjunto de instrucciones</h2>
+<table><thead><tr><th>Código</th><th>Instrucción</th><th>Efecto</th><th>modifica</th></tr></thead><tbody>{rows}</tbody></table>
+<p>ACC = acumulador, mem[x] = celda de memoria x.</p>
+<h2>Directiva de ensamblador DATA</h2>
+<p><code>DATA</code> no es una instrucción de la máquina, sino una directiva para el ensamblador:
+<code>nombre: DATA v1, v2, …</code> coloca los valores en las siguientes celdas de memoria libres;
+<code>nombre</code> es la dirección de la primera celda. La máquina no conoce DATA: si una de esas celdas se
+ejecuta como instrucción, su valor se interpreta como opcode.</p>
+<p><b>Dar nombre a una celda de memoria:</b> <code>b: DATA 0</code> reserva la siguiente celda libre con el
+valor inicial 0 y le da el nombre <code>b</code>, de forma parecida a una variable. A partir de ahí se puede
+escribir <code>b</code> en lugar de la dirección, p. ej. <code>LOAD b</code>, <code>STORE b</code>,
+<code>ADD b</code>; el ensamblador inserta la dirección.</p>
+<h2>Colores en la memoria</h2>
+<p><b>Amarillo</b>: instrucción (opcode y operando), generada por el ensamblador o leída como instrucción durante la ejecución.
+<b>Azul</b>: datos, creados con DATA o escritos durante la ejecución (STORE).
+<b>Amarillo con esquina azul</b>: celda de programa sobrescrita durante la ejecución (código automodificable).
+Reiniciar restablece los colores tal como quedan tras el ensamblado.</p>
+<p>Además: amarillo intenso = acceso del micropaso actual (borde rojo al escribir),
+borde azul grueso = celda a la que apunta el contador de programa, borde azul fino = instrucción actual.</p>
+<h2>Memoria y números</h2>
+<p>{size} celdas (direcciones 0 … {last}), cada una con un número entero de {min} a {max}.
+Programa y datos comparten la misma memoria. Una instrucción ocupa dos celdas: opcode y operando.
+La variante inmediata (<code>#n</code>) tiene el opcode + 10.</p>
+<p>Flags: <b>Z</b> (resultado cero) y <b>N</b> (resultado negativo) los modifican ADD, SUB, MUL, DIV, MOD y CMP,
+pero no LOAD ni IN. CMP calcula ACC − operando sin modificar el acumulador.
+DIV y MOD funcionan como <code>//</code> y <code>%</code> en Python.</p>
+<p><b>La entrada y la salida</b> pasan por el acumulador como todos los datos: <code>IN</code> y luego
+<code>STORE x</code> guarda un valor introducido, <code>LOAD x</code> y luego <code>OUT</code> muestra una celda de memoria.</p>
+<p><b>Regla práctica:</b> poner un CMP antes de cada salto condicional (JE … JGE); así queda claro a qué se
+refiere el salto. Como las instrucciones aritméticas también modifican los flags, a veces se puede omitir el CMP
+(p. ej. <code>SUB #1</code> justo antes de <code>JG</code>); esto ahorra una instrucción, pero es más fácil
+pasarlo por alto.</p>
+<h2>Sintaxis</h2>
+<pre>; comentario
+inicio: LOAD  #5      ; valor inmediato
+        ADD   x       ; valor en la dirección x
+        STORE 42      ; dirección como número
+        JMP   inicio  ; destino del salto
+x:      DATA  7       ; celda(s) de datos: DATA 1, 2, 3</pre>
+<p>Un número sin <code>#</code> es una <b>dirección</b>: para el número 2 hay que escribir <code>#2</code>
+(<code>MOD 2</code> usa el contenido de la celda 2).</p>
+<p>Las etiquetas van al principio de la línea y terminan en <code>:</code>. <code>x+1</code> designa la celda
+siguiente a <code>x</code>. No se distingue entre mayúsculas y minúsculas.</p>
+<h2>Ciclo de instrucción</h2>
+<p>{phases}. Cada fase consta de micropasos (ciclos de reloj); en cada ciclo se transfiere un valor por un bus
+o dentro de la CPU.</p>
+<h2>Teclado</h2>
+<p>F5 iniciar/continuar · Espacio pausa · F10 paso · Esc reiniciar · P modo presentación</p>`,
+    },
   };
 
   function detect() {
@@ -529,8 +1037,8 @@ over a bus or within the CPU.</p>
       const s = localStorage.getItem(STORAGE_KEY);
       if (LANGS.includes(s)) return s;
     } catch (e) { /* kein Speicher verfügbar */ }
-    const nav = (typeof navigator !== 'undefined' && navigator.language) || 'de';
-    return nav.toLowerCase().startsWith('de') ? 'de' : 'en';
+    const nav = ((typeof navigator !== 'undefined' && navigator.language) || 'de').toLowerCase().slice(0, 2);
+    return LANGS.includes(nav) ? nav : 'en';
   }
 
   const i18n = {
@@ -548,10 +1056,14 @@ over a bus or within the CPU.</p>
 
     t(key, params) {
       let msg = messages[this.lang][key];
+      if (msg === undefined) msg = messages.en[key];   // fehlende Übersetzung: Englisch
       if (msg === undefined) msg = messages.de[key];
       if (msg === undefined) return key;
       return params ? msg.replace(/\{(\w+)\}/g, (m, k) => (k in params ? params[k] : m)) : msg;
     },
+
+    // Eintrag eines Objekts je Sprache ({de, en, …}), z. B. Titel und Quelltext der Beispiele
+    pick(obj, lang) { return obj[lang || this.lang] ?? obj.en; },
   };
 
   VN.i18n = i18n;

@@ -1,6 +1,6 @@
 # VNSim – Von-Neumann-Simulator
 
-*[English version](README.md)*
+*[English](README.md) · Deutsch · [Français](README.fr.md) · [Español](README.es.md)*
 
 **▶ Ausprobieren: <https://sc-sgs.github.io/vnsim/>** (ohne Installation, läuft in jedem aktuellen Browser)
 
@@ -11,8 +11,8 @@ und die Werte wandern über Daten-, Adress- und Steuerbus.
 
 Entstanden im Rahmen der Vorlesung „Informatik für Ingenieurwissenschaften“ an der Universität Stuttgart.
 
-Die Oberfläche gibt es auf **Deutsch und Englisch** (Umschalter oben rechts oder `?lang=de` /
-`?lang=en` in der Adresse).
+Die Oberfläche gibt es auf **Deutsch und Englisch**, außerdem auf Französisch und Spanisch (Umschalter
+oben rechts oder `?lang=de`, `?lang=en`, `?lang=fr`, `?lang=es` in der Adresse).
 
 ![VNSim-Screenshot](docs/screenshot-de.png)
 
@@ -143,8 +143,8 @@ Reines HTML/CSS/JavaScript ohne Abhängigkeiten und ohne Build; `index.html` mus
 | `js/machine.js` | Zustand und Befehlszyklus als Mikroschritte (ohne DOM) |
 | `js/view.js` | SVG-Schaubild und Animation |
 | `js/app.js` | Bedienoberfläche |
-| `js/i18n.js` | deutsche und englische Texte |
-| `js/examples.js` | Beispielprogramme (beide Sprachen) |
+| `js/i18n.js` | Texte aller Sprachen |
+| `js/examples.js` | Beispielprogramme (alle Sprachen) |
 
 Tests: `tests/index.html` im Browser öffnen oder headless:
 

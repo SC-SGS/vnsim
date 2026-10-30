@@ -489,7 +489,7 @@
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) return stored;
     } catch (e) { /* kein Speicher verfügbar */ }
-    return VN.EXAMPLES[0].source[lang()];
+    return VN.i18n.pick(VN.EXAMPLES[0].source);
   }
 
   // ------------------------------------------------------------------ Ereignisse
@@ -534,7 +534,7 @@
     fillExamples();
     sel.addEventListener('change', () => {
       const ex = VN.EXAMPLES.find(e => e.id === sel.value);
-      if (ex) { setSource(ex.source[lang()]); selectTab('program'); }
+      if (ex) { setSource(VN.i18n.pick(ex.source)); selectTab('program'); }
       sel.value = '';
     });
     $('sel-lang').addEventListener('change', (e) => setLanguage(e.target.value));
@@ -586,7 +586,7 @@
     for (const ex of VN.EXAMPLES) {
       const o = document.createElement('option');
       o.value = ex.id;
-      o.textContent = ex.title[lang()];
+      o.textContent = VN.i18n.pick(ex.title);
       sel.appendChild(o);
     }
   }
@@ -612,9 +612,9 @@
     newInstruction = true;
 
     // Unverändertes Beispiel durch die Fassung in der neuen Sprache ersetzen
-    const ex = VN.EXAMPLES.find(e => e.source[old] === ui.source.value);
+    const ex = VN.EXAMPLES.find(e => VN.i18n.pick(e.source, old) === ui.source.value);
     if (ex && !busy && !started()) {
-      setSource(ex.source[newLang]);
+      setSource(VN.i18n.pick(ex.source, newLang));
     } else {
       const p = VN.assemble(ui.source.value);
       if (loadedSource === ui.source.value) program = p;

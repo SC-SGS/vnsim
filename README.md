@@ -1,6 +1,6 @@
 # VNSim – Von Neumann Simulator
 
-*[Deutsche Version](README.de.md)*
+*English · [Deutsch](README.de.md) · [Français](README.fr.md) · [Español](README.es.md)*
 
 **▶ Try it: <https://sc-sgs.github.io/vnsim/>** (no installation, runs in any modern browser)
 
@@ -13,8 +13,8 @@ with values travelling over data, address and control bus.
 Developed for the lecture “Informatik für Ingenieurwissenschaften” (Computer Science for Engineers)
 at the University of Stuttgart.
 
-The user interface is available in **English and German** (switch at the top right, or use
-`?lang=en` / `?lang=de` in the URL).
+The user interface is available in **English and German**, and also in French and Spanish (switch at the
+top right, or use `?lang=en`, `?lang=de`, `?lang=fr`, `?lang=es` in the URL).
 
 ![VNSim screenshot](docs/screenshot-en.png)
 
@@ -145,8 +145,8 @@ when opened via `file://`. Main files:
 | `js/machine.js` | machine state and instruction cycle as micro steps (no DOM) |
 | `js/view.js` | SVG diagram and animation |
 | `js/app.js` | user interface |
-| `js/i18n.js` | German and English texts |
-| `js/examples.js` | example programs (both languages) |
+| `js/i18n.js` | texts in all languages |
+| `js/examples.js` | example programs (all languages) |
 
 Tests: open `tests/index.html` in a browser, or headless:
 

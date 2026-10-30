@@ -176,12 +176,18 @@ var VN = (typeof VN !== 'undefined') ? VN : {};
       // --- Speicherraster
       // Legende: Programm, Daten, zur Laufzeit veränderte Programmzelle (Ecke)
       el('rect', { x: 748, y: 480, width: 10, height: 10, class: 'cell kind-op' }, boxes);
-      el('text', { x: 762, y: 489, class: 'small' }, boxes, t('v.program'));
-      el('rect', { x: 830, y: 480, width: 10, height: 10, class: 'cell kind-data' }, boxes);
-      el('text', { x: 844, y: 489, class: 'small' }, boxes, t('v.data'));
-      el('rect', { x: 892, y: 480, width: 10, height: 10, class: 'cell kind-op' }, boxes);
-      el('path', { d: 'M896,480 L902,480 L902,486 Z', class: 'cell-mod' }, boxes);
-      el('text', { x: 906, y: 489, class: 'small' }, boxes, t('v.modified'));
+      const lgProg = el('text', { x: 762, y: 489, class: 'small' }, boxes, t('v.program'));
+      // Bei längeren Wörtern (z. B. Französisch) nach rechts ausweichen, sonst feste Lage
+      const after = (text, x) => {
+        try { const b = text.getBBox(); return Math.max(x, Math.ceil(b.x + b.width + 8)); } catch (e) { return x; }
+      };
+      const xData = after(lgProg, 830);
+      el('rect', { x: xData, y: 480, width: 10, height: 10, class: 'cell kind-data' }, boxes);
+      const lgData = el('text', { x: xData + 14, y: 489, class: 'small' }, boxes, t('v.data'));
+      const xMod = after(lgData, 892);
+      el('rect', { x: xMod, y: 480, width: 10, height: 10, class: 'cell kind-op' }, boxes);
+      el('path', { d: `M${xMod + 4},480 L${xMod + 10},480 L${xMod + 10},486 Z`, class: 'cell-mod' }, boxes);
+      el('text', { x: xMod + 14, y: 489, class: 'small' }, boxes, t('v.modified'));
       for (let c = 0; c < GRID.cols; c++) {
         el('text', { x: GRID.x + c * GRID.w + GRID.w / 2, y: GRID.y - 5, class: 'small grid-label',
           'text-anchor': 'middle' }, boxes, '+' + c);

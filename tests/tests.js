@@ -163,23 +163,30 @@ test('Format: dez / hex / bin (Zweierkomplement)', () => {
 
 // ---------------------------------------------------------------- Sprachen
 
-test('i18n: alle Schlüssel in beiden Sprachen vorhanden', () => {
-  const { de, en } = VN.i18n.messages;
-  eq(Object.keys(de).filter(k => !(k in en)), [], 'fehlt in en');
-  eq(Object.keys(en).filter(k => !(k in de)), [], 'fehlt in de');
+test('i18n: alle Schlüssel in allen Sprachen vorhanden', () => {
+  const { messages, LANGS } = VN.i18n;
+  const de = messages.de;
+  for (const lang of LANGS) {
+    const m = messages[lang];
+    ok(m, 'Wörterbuch ' + lang);
+    eq(Object.keys(de).filter(k => !(k in m)), [], 'fehlt in ' + lang);
+    eq(Object.keys(m).filter(k => !(k in de)), [], 'zu viel in ' + lang);
+  }
   for (const ins of VN.isa.INSTRUCTIONS) {
     ok(('ins.' + ins.code) in de, 'Text für Opcode ' + ins.code);
     if (ins.test) ok(('cond.' + ins.code) in de, 'Bedingung für Opcode ' + ins.code);
   }
 });
 
-test('i18n: Beispiele liefern in DE und EN dieselbe Ausgabe', () => {
+test('i18n: Beispiele liefern in allen Sprachen dieselbe Ausgabe', () => {
   const inputs = { maximum: [3, 8], countdown: [3], summe: [4], fakultaet: [5] };
   for (const ex of VN.EXAMPLES) {
     const de = run(example(ex.id, 'de'), inputs[ex.id]).m.outputs;
-    const en = run(example(ex.id, 'en'), inputs[ex.id]).m.outputs;
-    eq(en, de, ex.id);
     ok(de.length > 0, ex.id + ' ohne Ausgabe');
+    for (const lang of VN.i18n.LANGS) {
+      ok(ex.title[lang] && ex.source[lang], ex.id + ' ohne ' + lang);
+      eq(run(example(ex.id, lang), inputs[ex.id]).m.outputs, de, ex.id + ' ' + lang);
+    }
   }
 });
 
