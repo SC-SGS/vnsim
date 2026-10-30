@@ -59,6 +59,9 @@ button:disabled { opacity: .45; cursor: default; }
 button.primary { background: var(--midblue); border-color: var(--midblue); color: #fff; }
 button.primary:hover:not(:disabled) { background: #003f7a; }
 select { padding: 3px 4px; border: 1px solid var(--warmgrey); border-radius: 3px; background: #fff; }
+/* Breite wie mit DE/EN, damit die Option SWG (Osterei) die Leiste nicht verschiebt */
+#sel-lang { width: 50px; }
+html[lang="swg"] #sel-lang { width: auto; }
 input[type=range] { width: 80px; accent-color: var(--midblue); }
 
 /* ------------------------------------------------------------ Hauptbereich */

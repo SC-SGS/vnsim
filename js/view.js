@@ -145,7 +145,7 @@ var VN = (typeof VN !== 'undefined') ? VN : {};
       this.aluOp = el('text', { x: 240, y: 208, class: 'alu-op', 'text-anchor': 'middle' }, boxes, '');
       el('text', { x: 240, y: 232, class: 'alu-label', 'text-anchor': 'middle' }, boxes, 'ALU');
       el('text', { x: 155, y: 300, class: 'small', 'text-anchor': 'middle' }, boxes, t('v.result'));
-      this.reg('flags', boxes, 400, 210, 76, 44, 'Flags', 'flagreg');
+      this.reg('flags', boxes, 400, 210, 76, 44, t('v.flags'), 'flagreg');
 
       // --- Steuerwerk
       this.phaseChips = {};
@@ -164,7 +164,7 @@ var VN = (typeof VN !== 'undefined') ? VN : {};
       this.decDesc = el('text', { x: 948, y: 146, class: 'dec-desc', 'text-anchor': 'end' }, dec, '');
       this.reg('pc', boxes, 525, 240, 130, 44, t('v.pc'));
       this.reg('irOp', boxes, 680, 240, 70, 44, 'Opcode');
-      this.reg('irArg', boxes, 750, 240, 120, 44, 'Operand');
+      this.reg('irArg', boxes, 750, 240, 120, 44, t('v.irArg'));
       el('text', { x: 738, y: 236, class: 'small' }, boxes, t('v.ir'));   // rechts vom Pfeil zum Decoder
 
       // --- Ein-/Ausgabewerk

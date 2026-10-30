@@ -1,4 +1,4 @@
-// Beispielprogramme je Sprache (de, en, fr, es) (als Strings, damit index.html auch per file:// funktioniert)
+// Beispielprogramme je Sprache (de, en, fr, es, swg) (als Strings, damit index.html auch per file:// funktioniert)
 var VN = (typeof VN !== 'undefined') ? VN : {};
 
 VN.EXAMPLES = [
@@ -7,6 +7,7 @@ VN.EXAMPLES = [
     title: {
       de: 'Ausdruck (3 + 4 + 5) · (7 − 2³)', en: 'Expression (3 + 4 + 5) · (7 − 2³)',
       fr: 'Expression (3 + 4 + 5) · (7 − 2³)', es: 'Expresión (3 + 4 + 5) · (7 − 2³)',
+      swg: 'Ausdruck (3 + 4 + 5) · (7 − 2³)',
     },
     source: {
       de: `; x = (3 + 4 + 5) * (7 - 2 ** 3)
@@ -89,6 +90,26 @@ x:      DATA  0
 tmp:    DATA  0         ; resultado intermedio
 x:      DATA  0
 `,
+      swg: `; x = (3 + 4 + 5) * (7 - 2 ** 3)
+; Oiadressmaschin: oin Operand isch allaweil em Sparhäfele.
+        LOAD  #2
+        MUL   #2
+        MUL   #2        ; Sparhäfele = 2 ** 3
+        STORE h
+        LOAD  #7
+        SUB   h         ; Sparhäfele = 7 - 8
+        STORE h
+        LOAD  #3
+        ADD   #4
+        ADD   #5        ; Sparhäfele = 3 + 4 + 5
+        MUL   h
+        STORE x
+        OUT             ; Sparhäfele rausgeba
+        HALT
+
+h:      DATA  0         ; Zwischaergebnis
+x:      DATA  0
+`,
     },
   },
   {
@@ -96,6 +117,7 @@ x:      DATA  0
     title: {
       de: 'Maximum zweier Zahlen', en: 'Maximum of two numbers',
       fr: 'Maximum de deux nombres', es: 'Máximo de dos números',
+      swg: 'Was isch größer?',
     },
     source: {
       de: `; Gibt die größere von zwei eingegebenen Zahlen aus.
@@ -162,6 +184,22 @@ salida:
 a:      DATA  0
 b:      DATA  0
 `,
+      swg: `; Gibt de größere vo zwoi eigäbene Zahla aus.
+        IN              ; Nei → Sparhäfele
+        STORE a
+        IN
+        STORE b
+        LOAD  a
+        CMP   b         ; Fähnla ← a - b
+        JGE   ausgabe   ; a - b >= 0  →  a isch größer oder gleich ond stoht scho em Sparhäfele
+        LOAD  b
+ausgabe:
+        OUT             ; Sparhäfele rausgeba
+        HALT
+
+a:      DATA  0
+b:      DATA  0
+`,
     },
   },
   {
@@ -169,6 +207,7 @@ b:      DATA  0
     title: {
       de: 'Countdown', en: 'Countdown',
       fr: 'Compte à rebours', es: 'Cuenta atrás',
+      swg: 'Runterzähla',
     },
     source: {
       de: `; Zählt von n bis 1 herunter – nur mit dem Akku, ganz ohne Datenzellen.
@@ -211,6 +250,16 @@ bucle:
         JG    bucle     ; seguir mientras ACC > 0
         HALT
 `,
+      swg: `; Zählt vo n bis 1 runter – bloß mit em Sparhäfele, ganz ohne Datafächla.
+; Ausnahm vo d’r Faustregel „vor jeden bedingta Hopfer a CMP“:
+; SUB setzt d’ Fähnla selber, des CMP #0 ka mr weglassa ond spart en Befehl.
+        IN              ; Sparhäfele = n
+schleife:
+        OUT
+        SUB   #1
+        JG    schleife  ; weiter, so lang ’s Sparhäfele no net null isch
+        HALT
+`,
     },
   },
   {
@@ -218,6 +267,7 @@ bucle:
     title: {
       de: 'Summe 1 + 2 + … + n', en: 'Sum 1 + 2 + … + n',
       fr: 'Somme 1 + 2 + … + n', es: 'Suma 1 + 2 + … + n',
+      swg: 'Zammazähla 1 + 2 + … + n',
     },
     source: {
       de: `; Berechnet 1 + 2 + ... + n
@@ -308,6 +358,29 @@ fin:    LOAD  suma
 n:      DATA  0
 suma:   DATA  0
 `,
+      swg: `; Rechnet 1 + 2 + ... + n
+        IN
+        STORE n
+        LOAD  #0
+        STORE summ
+schleife:
+        LOAD  n
+        CMP   #0
+        JLE   feierabend ; fertig, wenn n <= 0
+        ADD   summ
+        STORE summ
+        LOAD  n
+        SUB   #1
+        STORE n
+        JMP   schleife
+feierabend:
+        LOAD  summ
+        OUT
+        HALT
+
+n:      DATA  0
+summ:   DATA  0
+`,
     },
   },
   {
@@ -315,6 +388,7 @@ suma:   DATA  0
     title: {
       de: 'Fakultät n!', en: 'Factorial n!',
       fr: 'Factorielle n!', es: 'Factorial n!',
+      swg: 'Fakultät n!',
     },
     source: {
       de: `; Berechnet n! = 1 · 2 · ... · n
@@ -409,6 +483,30 @@ fin:    LOAD  f
 n:      DATA  0
 f:      DATA  1
 `,
+      swg: `; Rechnet n! = 1 · 2 · ... · n
+; Ab n = 8 wird’s z’ viel fürs Rechnerle (-9999 … 9999).
+        IN
+        STORE n
+        LOAD  #1
+        STORE f
+schleife:
+        LOAD  n
+        CMP   #1
+        JLE   feierabend ; fertig, wenn n <= 1
+        MUL   f
+        STORE f
+        LOAD  n
+        SUB   #1
+        STORE n
+        JMP   schleife
+feierabend:
+        LOAD  f
+        OUT
+        HALT
+
+n:      DATA  0
+f:      DATA  1
+`,
     },
   },
   {
@@ -416,6 +514,7 @@ f:      DATA  1
     title: {
       de: 'Summe einer Liste (selbstmodifizierend)', en: 'Sum of a list (self-modifying)',
       fr: 'Somme d’une liste (auto-modifiant)', es: 'Suma de una lista (automodificable)',
+      swg: 'Lischt zammazähla (verändert sich selber)',
     },
     source: {
       de: `; Summe einer Liste – das Programm verändert sich selbst!
@@ -513,6 +612,30 @@ instr:  ADD   lista     ; este operando se modifica más abajo
 cuenta: DATA  5
 suma:   DATA  0
 lista:  DATA  3, 1, 4, 1, 5
+`,
+      swg: `; Lischt zammazähla – des Programm verändert sich selber!
+; Programm ond Data liegat uf d’r selba Bühne (Von-Neumann-Prinzip).
+; Ohne indirekte Adressierung wird d’ Adress em Befehl „ADD lischt“
+; bei jedem Durchlauf um 1 erhöht.
+schleife:
+        LOAD  summ
+befehl: ADD   lischt    ; der Operand wird weiter unta verändert
+        STORE summ
+        LOAD  befehl+1  ; Adress aus em Befehl lesa …
+        ADD   #1
+        STORE befehl+1  ; … ond um 1 erhöht zruckschreiba
+        LOAD  anzahl
+        SUB   #1
+        STORE anzahl
+        CMP   #0
+        JG    schleife  ; weiter, so lang anzahl > 0
+        LOAD  summ
+        OUT
+        HALT
+
+anzahl: DATA  5
+summ:   DATA  0
+lischt: DATA  3, 1, 4, 1, 5
 `,
     },
   },

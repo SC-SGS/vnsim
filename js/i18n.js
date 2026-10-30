@@ -1,10 +1,12 @@
-// Sprachumschaltung (Deutsch, Englisch, Französisch, Spanisch): VN.t('schluessel', {platzhalter: wert})
+// Sprachumschaltung (Deutsch, Englisch, Französisch, Spanisch, Schwäbisch): VN.t('schluessel', {platzhalter: wert})
 var VN = (typeof VN !== 'undefined') ? VN : {};
 
 (function (VN) {
   'use strict';
 
-  const LANGS = ['de', 'en', 'fr', 'es'];
+  const LANGS = ['de', 'en', 'fr', 'es', 'swg'];
+  // Rückfallsprache für Texte, die in einer Sprache fehlen (Schwäbisch ist ein Osterei)
+  const PARTIAL = { swg: 'de' };
   const STORAGE_KEY = 'vnsim-lang';
 
   const messages = {
@@ -106,6 +108,8 @@ var VN = (typeof VN !== 'undefined') ? VN : {};
       'v.acc': 'Akku',
       'v.opReg': 'Operand',
       'v.result': 'Ergebnis',
+      'v.flags': 'Flags',
+      'v.irArg': 'Operand',
       'v.decoder': 'Befehlsdecoder',
       'v.pc': 'Befehlszähler',
       'v.ir': 'Befehlsregister',
@@ -359,6 +363,8 @@ oder innerhalb der CPU übertragen.</p>
       'v.acc': 'Accumulator',
       'v.opReg': 'Operand',
       'v.result': 'Result',
+      'v.flags': 'Flags',
+      'v.irArg': 'Operand',
       'v.decoder': 'Instruction Decoder',
       'v.pc': 'Program Counter',
       'v.ir': 'Instruction Register',
@@ -612,6 +618,8 @@ over a bus or within the CPU.</p>
       'v.acc': 'Accumulateur',
       'v.opReg': 'Opérande',
       'v.result': 'Résultat',
+      'v.flags': 'Flags',
+      'v.irArg': 'Operand',
       'v.decoder': 'Décodeur d’instructions',
       'v.pc': 'Compteur ordinal',
       'v.ir': 'Registre d’instruction',
@@ -866,6 +874,8 @@ transférée sur un bus ou à l’intérieur du processeur.</p>
       'v.acc': 'Acumulador',
       'v.opReg': 'Operando',
       'v.result': 'Resultado',
+      'v.flags': 'Flags',
+      'v.irArg': 'Operand',
       'v.decoder': 'Decodificador de instrucciones',
       'v.pc': 'Contador de programa',
       'v.ir': 'Registro de instrucción',
@@ -1026,6 +1036,266 @@ o dentro de la CPU.</p>
 <h2>Teclado</h2>
 <p>F5 iniciar/continuar · Espacio pausa · F10 paso · Esc reiniciar · P modo presentación</p>`,
     },
+    // Schwäbisch (Osterei): Sparhäfele = Akku, Bühne = Speicher, Ausdeutscher = Befehlsdecoder,
+    // Schees = Bus, Fähnla = Flags, hopfa = springen; Rückfall auf 'de' über PARTIAL
+    swg: {
+      'ins.0': 'Feierabend macha',
+      'ins.1': 'Sparhäfele ← Bühne[x]',
+      'ins.11': 'Sparhäfele ← n',
+      'ins.2': 'Bühne[x] ← Sparhäfele',
+      'ins.3': 'Sparhäfele ← Sparhäfele + Bühne[x]',
+      'ins.13': 'Sparhäfele ← Sparhäfele + n',
+      'ins.4': 'Sparhäfele ← Sparhäfele − Bühne[x]',
+      'ins.14': 'Sparhäfele ← Sparhäfele − n',
+      'ins.5': 'Sparhäfele ← Sparhäfele · Bühne[x]',
+      'ins.15': 'Sparhäfele ← Sparhäfele · n',
+      'ins.6': 'Sparhäfele ← Sparhäfele // Bühne[x]',
+      'ins.16': 'Sparhäfele ← Sparhäfele // n',
+      'ins.7': 'Sparhäfele ← Sparhäfele % Bühne[x]',
+      'ins.17': 'Sparhäfele ← Sparhäfele % n',
+      'ins.8': 'Fähnla ← Sparhäfele − Bühne[x] (Sparhäfele bleibt)',
+      'ins.18': 'Fähnla ← Sparhäfele − n (Sparhäfele bleibt)',
+      'ins.20': 'Allaweil hopfa',
+      'ins.21': 'Hopfa, wenn’s gleich isch (Z = 1)',
+      'ins.22': 'Hopfa, wenn’s net gleich isch (Z = 0)',
+      'ins.23': 'Hopfa, wenn’s kloiner isch (N = 1)',
+      'ins.24': 'Hopfa, wenn’s kloiner oder gleich isch',
+      'ins.25': 'Hopfa, wenn’s größer isch',
+      'ins.26': 'Hopfa, wenn’s größer oder gleich isch (N = 0)',
+      'ins.30': 'Sparhäfele ← Nei',
+      'ins.31': 'Raus ← Sparhäfele',
+      'cond.21': 'Z = 1',
+      'cond.22': 'Z = 0',
+      'cond.23': 'N = 1',
+      'cond.24': 'N = 1 oder Z = 1',
+      'cond.25': 'N = 0 ond Z = 0',
+      'cond.26': 'N = 0',
+
+      'asm.mnemonicLabel': '„{name}“ isch a Befehl, koi Label.',
+      'asm.dupLabel': 'S Label „{name}“ hemmr scho.',
+      'asm.dataArgs': 'DATA will oin oder mehrere Wert, z. B. „DATA 0“ oder „DATA 1, 2, 3“.',
+      'asm.unknown': 'Den Befehl „{m}“ kennt mr net.',
+      'asm.tooBig': 'S Programm isch z’ groß: {n} Fächla bräucht’s, uf d’r Bühne sen aber bloß {max}.',
+      'asm.undefLabel': 'S Label „{name}“ gibt’s net.',
+      'asm.badOperand': '„{arg}“ isch weder a Adress no a Label.',
+      'asm.notInt': '„{arg}“ isch koi ganze Zahl.',
+      'asm.valueRange': 'D’r Wert {v} passt net zwischa {min} ond {max}.',
+      'asm.noOperand': '{m} braucht koi Zuagab.',
+      'asm.ioOperand': '{m} braucht koi Zuagab: IN duat’s ens Sparhäfele, OUT holt’s raus (z. B. „IN“ ond no „STORE x“, „LOAD x“ ond no „OUT“).',
+      'asm.oneOperand': '{m} braucht genau oi Zuagab.',
+      'asm.noImm': '{m} will a Adress, koin Direktwert (#).',
+      'asm.immNotInt': 'D’r Direktwert „{arg}“ isch koi ganze Zahl.',
+      'asm.immRange': 'D’r Direktwert {v} passt net zwischa {min} ond {max}.',
+      'outOfMem': '{what} {v} liegt neba d’r Bühne (0 … {max}).',
+      'what.addr': 'D’ Adress',
+      'what.target': 'S Hopfziel',
+      'what.pc': 'D’r Befehlszählr',
+      'what.result': 'was rauskommt',
+      'what.input': 'was neikommt',
+
+      'phase.fetch': 'Befehl hola',
+      'phase.decode': 'Befehl ausdeutscha',
+      'phase.operands': 'Zuagab hola',
+      'phase.execute': 'Befehl schaffa',
+      'phase.writeback': 'Ergebnis wegräuma',
+      'm.overflow': 'Überlauf: {what} {v} passt net zwischa {min} ond {max}.',
+      'm.pcToBus': 'Befehlszählr {pc} → Adressschees',
+      'm.fetchToIr': 'Bühne[{a}] = {v} → Dataschees → Befehlskäschtle ({part})',
+      'm.pcInc': 'Befehlszählr oins weiter → {pc}',
+      'm.badOpcode': 'Opcode {op} an Adress {a} kennt mr net – stoht do vielleicht a Datawert statt am Befehl?',
+      'm.decode': 'Ausdeutscher: {op} isch {m} – {text}',
+      'm.immToOp': 'Direktwert {v} → Zuagab',
+      'm.addrToBus': 'Adress {a} → Adressschees',
+      'm.memToOp': 'Bühne[{a}] = {v} → Dataschees → Zuagab',
+      'm.halt': 'HALT: Feierabend.',
+      'm.div0': 'Durch 0 teila ({m}) – des goht fei net.',
+      'm.cmp': 'ALU vergleicht: {a} − {b} = {r} → Fähnla {flags}',
+      'm.alu': 'ALU rechnet: {a} {op} {b} = {r} → Fähnla {flags}',
+      'm.condMet': '{cond} stimmt',
+      'm.always': 'Hopfa wird allaweil',
+      'm.jump': '{why}: Hopfziel {t} → Befehlszählr',
+      'm.noJump': '{cond} stimmt net: koi Hopfer, Befehlszählr bleibt bei {pc}',
+      'm.resToAcc': 'Was rauskommt ({v}) → Sparhäfele',
+      'm.opToAcc': 'Zuagab {v} → Sparhäfele',
+      'm.accToMem': 'Sparhäfele {v} → Dataschees → Bühne[{a}]',
+      'm.wait': 'Wart uf a Eingab …',
+      'm.inToReg': 'Eingab {v} → Nei',
+      'm.inToAcc': 'Nei {v} → Dataschees → Sparhäfele',
+      'm.accToOut': 'Sparhäfele {v} → Dataschees → Raus',
+      'bus.read': 'hola',
+      'bus.write': 'nalega',
+
+      'v.arith': 'Rechastub',
+      'v.control': 'D’r Chef',
+      'v.memory': 'Bühne',
+      'v.io': 'Nei ond Raus',
+      'v.acc': 'Sparhäfele',
+      'v.opReg': 'Zuagab',
+      'v.result': 'Was rauskommt',
+      'v.flags': 'Fähnla',
+      'v.irArg': 'Zuagab',
+      'v.decoder': 'Ausdeutscher',
+      'v.pc': 'Befehlszählr',
+      'v.ir': 'Befehlskäschtle',
+      'v.in': 'Nei',
+      'v.out': 'Raus',
+      'v.outputs': 'Was bisher rauskomma isch',
+      'v.program': 'Programm',
+      'v.data': 'Data',
+      'v.modified': 'verhunzt',
+      'v.modifiedTip': 'Des Programmfächle isch onderwegs überschrieba worda',
+      'v.dataBus': 'Dataschees',
+      'v.addrBus': 'Adressschees',
+      'v.ctrlBus': 'Chefschees',
+      'v.cellTip': 'Fächle {a}: {v}',
+      'v.clickEdit': 'Druff klicka zum Ändra',
+
+      'ui.title': 'VNSim – Von-Neumann-Rechnerle',
+      'ui.subtitle': 'Von-Neumann-Rechnerle',
+      'ui.run': '▶ Los',
+      'ui.continue': '▶ Weiter',
+      'ui.run.title': 'Los / weiter (F5)',
+      'ui.pause': '❚❚ Paus',
+      'ui.pause.title': 'Veschperpaus (Leertaste)',
+      'ui.step': '⏭ Schrittle',
+      'ui.step.title': 'A Schrittle macha (F10)',
+      'ui.reset': '⟲ Nomol',
+      'ui.reset.title': 'Nomol vo vorne (Esc)',
+      'ui.controls': 'Ablauf',
+      'ui.granularity': 'Wie weit',
+      'ui.gran.micro': 'Schrittle',
+      'ui.gran.phase': 'Phas',
+      'ui.gran.instr': 'Befehl',
+      'ui.speed': 'Tempo',
+      'ui.anim': 'Gwusel',
+      'ui.numbers': 'Zahla',
+      'ui.fmt.dec': 'dezimal',
+      'ui.fmt.hex': 'hex',
+      'ui.fmt.bin': 'binär',
+      'ui.examples': 'Beischbiel …',
+      'ui.examples.title': 'A Beischbielprogramm lada',
+      'ui.open': 'Uffmacha',
+      'ui.open.title': 'Programm aus ra Datei lada',
+      'ui.save': 'Ablega',
+      'ui.save.title': 'Programm en a Datei ablega',
+      'ui.link': 'Link',
+      'ui.link.title': 'Link mit dem Programm en d’ Zwischaablag duaa',
+      'ui.present': 'Beamer',
+      'ui.present.title': 'Vorführmodus (P)',
+      'ui.lang.title': 'Sprach / Language',
+      'ui.tab.program': 'Programm',
+      'ui.tab.memory': 'Bühne',
+      'ui.tab.help': 'Befehl',
+      'ui.tab.about': 'Was isch des',
+      'ui.source': 'Assembler-Quelltext',
+      'ui.memHint': 'Wert direkt ändra: Programm ond Data liegat uf d’r gleicha Bühne.',
+      'ui.memAddr': 'Adr.',
+      'ui.memValue': 'Wert',
+      'ui.memMeaning': 'Was es hoißt',
+      'ui.svg': 'Schaubild vom Von-Neumann-Rechnerle',
+      'ui.input': 'Nei',
+      'ui.cntInstr': 'Befehl',
+      'ui.cntSteps': 'Takt',
+      'ui.cntMem': 'Bühnagäng',
+      'ui.fileName': 'programm.vns',
+
+      'st.ready': 'Parat',
+      'st.readyText': 'A Programm schreiba oder a Beischbiel aussuacha, no ▶ Los.',
+      'st.error': 'Hoppla',
+      'st.errLine': 'Zeil {line}: {msg}',
+      'st.more': ' (ond no {n} weitere)',
+      'st.running': 'Schafft',
+      'st.runningText': 'D’r Rechner schafft …',
+      'st.stopped': 'Ghalta',
+      'st.limit': 'Meh als {n} Takt – vielleicht a Endlosschleif? Mit ▶ goht’s weiter.',
+      'st.stoppedText': 'Ghalta.',
+      'st.done': 'Fertig',
+      'st.doneText': 'Fertig: {i} Befehl, {s} Takt, {m} Bühnagäng. Net gschimpft isch globt gnug.',
+      'st.output': ' Raus komma isch: {list}',
+      'st.runtimeError': 'Des hot gschebbert',
+      'st.input': 'Nei',
+      'st.inputText': 'IN: Bitte a ganze Zahl eigäba ond mit Enter bstätiga.',
+      'st.inputInvalid': 'Bitte a ganze Zahl zwischa {min} ond {max} eigäba.',
+      'st.pause': 'Veschper',
+      'st.pauseText': 'Veschperpaus. ▶ goht’s weiter, ⏭ Schrittle für Schrittle.',
+      'st.resetText': 'Wieder vo vorne. ▶ Los oder ⏭ Schrittle.',
+      'st.loaded': 'Programm glada. ▶ Los oder ⏭ Schrittle.',
+      'st.changed': 'Programm gändert – ▶ Los ladt’s nei.',
+      'st.memory': 'Bühne',
+      'st.memInvalid': 'Des goht net ens Fächle {a}: bloß ganze Zahla vo {min} bis {max}.',
+      'st.memSet': 'Fächle {a} ← {v}',
+      'st.asInstr': ' (als Befehl: {m})',
+      'st.link': 'Link',
+      'st.linkCopied': 'D’r Link mit dem Programm isch en d’r Zwischaablag.',
+      'st.linkPrompt': 'Link zum Kopiera:',
+      'err.line': 'Zeil {line}:',
+      'mem.cell': 'Fächle {a}',
+      'mem.noInstr': '? koi Befehl',
+      'mem.data': 'Data',
+
+      'about.html': `
+<h2>VNSim – Von-Neumann-Rechnerle</h2>
+<p>A Simulator für en oifacha Von-Neumann-Rechner mit Sparhäfele: Programm ond Data liegat uf d’r selba Bühne,
+ond jeder Befehl lauft sichtbar durch d’ Phasa Fetch, Decode, Fetch Operands, Execute ond Write Back.</p>
+<p>Gmacht für d’ Vorlesung „Informatik für Ingenieurwissenschaften“ an d’r Uni Stuagart.</p>
+<p>Gschafft hot’s: Dirk Pflüger<br>
+Quellcode: <a href="https://github.com/SC-SGS/vnsim" target="_blank" rel="noopener">github.com/SC-SGS/vnsim</a><br>
+Lizenz: MIT – koscht nix<br>
+Schrift: TeX Gyre Heros (GUST Font License)</p>
+<p><i>Die schwäbische Fassung isch a Osterei. Wer’s uf Hochdeutsch will: oba rechts uf DE stella.</i></p>`,
+      'help.target': 'ziel',
+      'help.html': `
+<h2>Was d’r Rechner ka</h2>
+<table><thead><tr><th>Code</th><th>Befehl</th><th>Was er duat</th><th>Fähnla</th></tr></thead><tbody>{rows}</tbody></table>
+<h2>Wer isch wer</h2>
+<p><b>Sparhäfele</b> = Akku, <b>Zuagab</b> = Operand(enregischter), <b>Befehlszählr</b> = Befehlszähler,
+<b>Befehlskäschtle</b> = Befehlsregischter, <b>Ausdeutscher</b> = Befehlsdecoder, <b>Rechastub</b> = Rechawerk,
+<b>D’r Chef</b> = Steuerwerk, <b>Bühne</b> = Speicher, <b>Fächle</b> = Speicherzell, <b>Schees</b> = Bus,
+<b>Fähnla</b> = Flags, <b>hopfa</b> = springa, <b>Bühnagang</b> = Speicherzugriff.</p>
+<h2>DATA – des isch koin Befehl</h2>
+<p><code>DATA</code> kennt d’r Rechner gar net, des isch bloß a Anweisung an da Assembler:
+<code>name: DATA w1, w2, …</code> legt d’ Wert en d’ nächste freie Fächla uf d’r Bühne;
+<code>name</code> isch d’ Adress vom erschta Fächle. Wenn mr so a Fächle als Befehl ausführt,
+no gilt sei Wert halt als Opcode – ob des Sinn macht oder net.</p>
+<p><b>Fächle an Nama geba:</b> <code>b: DATA 0</code> reserviert ’s nächste freie Fächle mit 0 drin
+ond nennt’s <code>b</code>, fascht wie a Variable. Danach ka mr überall <code>b</code> schreiba statt dr Adress,
+z. B. <code>LOAD b</code>, <code>STORE b</code>, <code>ADD b</code>; d’r Assembler setzt d’ Adress selber ei.</p>
+<h2>Farba uf d’r Bühne</h2>
+<p><b>Gelb</b>: Befehl (Opcode ond Zuagab) – vom Assembler gmacht oder onderwegs als Befehl gholt.
+<b>Blau</b>: Data – mit DATA aaglegt oder onderwegs nagschrieba (STORE).
+<b>Gelb mit blauer Eck</b>: a Programmfächle, des onderwegs überschrieba worda isch (des Programm verhunzt sich selber).
+⟲ Nomol macht d’ Farba wieder wie nachem Assembliera.</p>
+<p>Ond: knallgelb = do wird grad im Schrittle zugriffa (roter Rand beim Schreiba),
+dicker blauer Rand = do zeigt d’r Befehlszählr na, dünner blauer Rand = d’r Befehl, der grad dra isch.</p>
+<h2>Bühne ond Zahla</h2>
+<p>{size} Fächla (Adressa 0 … {last}), en jedem a ganze Zahl vo {min} bis {max}.
+Programm ond Data liegat uf d’r gleicha Bühne. A Befehl braucht zwoi Fächla: Opcode ond Zuagab.
+Mit Direktwert (<code>#n</code>) isch d’r Opcode um 10 größer.</p>
+<p>Fähnla: <b>Z</b> (’s isch null rauskomma) ond <b>N</b> (’s isch negativ rauskomma) setzat ADD, SUB, MUL, DIV, MOD ond CMP,
+aber net LOAD ond IN. CMP rechnet Sparhäfele − Zuagab, lässt aber ’s Sparhäfele en Ruah.
+DIV ond MOD rechnat wie <code>//</code> ond <code>%</code> en Python.</p>
+<p><b>Nei ond Raus</b> goht wie älles übers Sparhäfele: <code>IN</code> ond no <code>STORE x</code> legt a Eingab
+uf d’ Bühne, <code>LOAD x</code> ond no <code>OUT</code> gibt a Fächle raus.</p>
+<p><b>Faustregel:</b> Vor jeden bedingta Hopfer (JE … JGE) a CMP – no weiß mr, worauf sich d’r Hopfer bezieht.
+Weil au d’ Rechabefehl d’ Fähnla setzat, ka mr des CMP manchmol weglassa (z. B. <code>SUB #1</code> direkt
+vor <code>JG</code>); des spart en Befehl – ond a Schwob spart gern –, aber mr übersieht’s leichter.</p>
+<h2>Wie mr’s schreibt</h2>
+<pre>; Kommentar
+afang:  LOAD  #5      ; Direktwert
+        ADD   x       ; Wert vom Fächle x
+        STORE 42      ; Adress als Zahl
+        JMP   afang   ; Hopfziel
+x:      DATA  7       ; Datafächle: DATA 1, 2, 3</pre>
+<p>A Zahl ohne <code>#</code> isch a <b>Adress</b> – für d’ Zahl 2 muass mr <code>#2</code> schreiba
+(<code>MOD 2</code> rechnet mit dem, was em Fächle 2 drin isch).</p>
+<p>Labels standat am Zeilaafang ond hörat mit <code>:</code> uff. <code>x+1</code> isch ’s Fächle nach <code>x</code>.
+Groß oder kloi – des isch wurscht.</p>
+<h2>Wie a Befehl abschafft wird</h2>
+<p>{phases}. Jede Phas hot Schrittla (Takt); en jedem Takt fährt a Wert mit ra Schees
+oder innerhalb vo d’r CPU.</p>
+<h2>Tastatur</h2>
+<p>F5 Los/Weiter · Leertaste Veschper · F10 Schrittle · Esc Nomol · P Beamer</p>`,
+    },
   };
 
   function detect() {
@@ -1043,6 +1313,7 @@ o dentro de la CPU.</p>
 
   const i18n = {
     LANGS,
+    PARTIAL,
     messages,
     lang: detect(),
 
@@ -1056,14 +1327,18 @@ o dentro de la CPU.</p>
 
     t(key, params) {
       let msg = messages[this.lang][key];
-      if (msg === undefined) msg = messages.en[key];   // fehlende Übersetzung: Englisch
+      if (msg === undefined) msg = messages[PARTIAL[this.lang] || 'en'][key];   // fehlende Übersetzung
+      if (msg === undefined) msg = messages.en[key];
       if (msg === undefined) msg = messages.de[key];
       if (msg === undefined) return key;
       return params ? msg.replace(/\{(\w+)\}/g, (m, k) => (k in params ? params[k] : m)) : msg;
     },
 
     // Eintrag eines Objekts je Sprache ({de, en, …}), z. B. Titel und Quelltext der Beispiele
-    pick(obj, lang) { return obj[lang || this.lang] ?? obj.en; },
+    pick(obj, lang) {
+      const l = lang || this.lang;
+      return obj[l] ?? obj[PARTIAL[l]] ?? obj.en;
+    },
   };
 
   VN.i18n = i18n;

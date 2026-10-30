@@ -184,8 +184,8 @@ test('i18n: Beispiele liefern in allen Sprachen dieselbe Ausgabe', () => {
     const de = run(example(ex.id, 'de'), inputs[ex.id]).m.outputs;
     ok(de.length > 0, ex.id + ' ohne Ausgabe');
     for (const lang of VN.i18n.LANGS) {
-      ok(ex.title[lang] && ex.source[lang], ex.id + ' ohne ' + lang);
-      eq(run(example(ex.id, lang), inputs[ex.id]).m.outputs, de, ex.id + ' ' + lang);
+      if (!(lang in VN.i18n.PARTIAL)) ok(ex.title[lang] && ex.source[lang], ex.id + ' ohne ' + lang);
+      if (ex.source[lang]) eq(run(example(ex.id, lang), inputs[ex.id]).m.outputs, de, ex.id + ' ' + lang);
     }
   }
 });
@@ -199,6 +199,14 @@ test('i18n: englische Meldungen', () => {
     eq(VN.isa.text(VN.isa.byCode.get(3)), 'ACC ← ACC + mem[x]');
   });
   eq(VN.assemble('LOAD y').errors[0].message, 'Label „y“ ist nicht definiert.');
+});
+
+test('i18n: Schwäbisch fällt auf Deutsch zurück', () => {
+  inLang('swg', () => {
+    eq(VN.t('m.halt'), 'HALT: Feierabend.');
+    eq(VN.t('v.pc'), 'Befehlszählr');
+    eq(VN.i18n.pick({ de: 'd', en: 'e' }), 'd');
+  });
 });
 
 // ---------------------------------------------------------------- Speicherfarben (Nutzung zur Laufzeit)
