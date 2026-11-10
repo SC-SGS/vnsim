@@ -125,7 +125,7 @@ par `:` (lettres sans accents, chiffres et `_`).
 | | |
 |---|---|
 | **▶ Démarrer** | exécuter jusqu’à HALT (F5) |
-| **⏭ Pas** | une micro-étape, une phase ou une instruction, selon « Pas » (F10) |
+| **⏭ Pas** | une micro-étape, une phase ou une instruction, selon « Pas » (F10 ou Pg suiv, p. ex. avec une télécommande de présentation) |
 | **Pause / Réinit.** | Espace / Échap |
 | **Lien** | copie un lien contenant le programme actuel |
 | **Présenter** | mode présentation (P) |

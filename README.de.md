@@ -121,7 +121,7 @@ von Zelle 2). Groß-/Kleinschreibung spielt keine Rolle; Labels stehen am Zeilen
 | | |
 |---|---|
 | **▶ Start** | läuft bis HALT (F5) |
-| **⏭ Schritt** | ein Mikroschritt, eine Phase oder ein Befehl, je nach „Schrittweite“ (F10) |
+| **⏭ Schritt** | ein Mikroschritt, eine Phase oder ein Befehl, je nach „Schrittweite“ (F10 oder Bild↓, z. B. mit einem Presenter) |
 | **Pause / Reset** | Leertaste / Esc |
 | **Link** | kopiert eine Adresse, die das aktuelle Programm enthält |
 | **Beamer** | Präsentationsmodus (P) |

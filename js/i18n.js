@@ -135,7 +135,7 @@ var VN = (typeof VN !== 'undefined') ? VN : {};
       'ui.pause': '❚❚ Pause',
       'ui.pause.title': 'Pause (Leertaste)',
       'ui.step': '⏭ Schritt',
-      'ui.step.title': 'Einen Schritt ausführen (F10)',
+      'ui.step.title': 'Einen Schritt ausführen (F10 / Bild↓)',
       'ui.reset': '⟲ Reset',
       'ui.reset.title': 'Zurücksetzen (Esc)',
       'ui.controls': 'Ablauf',
@@ -266,7 +266,7 @@ Groß-/Kleinschreibung spielt keine Rolle.</p>
 <p>{phases}. Jede Phase besteht aus Mikroschritten (Takten); in jedem Takt wird ein Wert über einen Bus
 oder innerhalb der CPU übertragen.</p>
 <h2>Tastatur</h2>
-<p>F5 Start/Weiter · Leertaste Pause · F10 Schritt · Esc Reset · P Beamer-Modus</p>`,
+<p>F5 Start/Weiter · Leertaste Pause · F10 oder Bild↓ (Presenter) Schritt · Esc Reset · P Beamer-Modus</p>`,
     },
 
     en: {
@@ -389,7 +389,7 @@ oder innerhalb der CPU übertragen.</p>
       'ui.pause': '❚❚ Pause',
       'ui.pause.title': 'Pause (space)',
       'ui.step': '⏭ Step',
-      'ui.step.title': 'Execute one step (F10)',
+      'ui.step.title': 'Execute one step (F10 / PgDn)',
       'ui.reset': '⟲ Reset',
       'ui.reset.title': 'Reset (Esc)',
       'ui.controls': 'Execution',
@@ -522,7 +522,7 @@ Upper and lower case are treated the same.</p>
 <p>{phases}. Each phase consists of micro steps (clock cycles); in each cycle one value is transferred
 over a bus or within the CPU.</p>
 <h2>Keyboard</h2>
-<p>F5 start/continue · Space pause · F10 step · Esc reset · P presentation mode</p>`,
+<p>F5 start/continue · Space pause · F10 or PgDn (presenter) step · Esc reset · P presentation mode</p>`,
     },
     fr: {
       'ins.0': 'Arrêter le programme',
@@ -644,7 +644,7 @@ over a bus or within the CPU.</p>
       'ui.pause': '❚❚ Pause',
       'ui.pause.title': 'Pause (espace)',
       'ui.step': '⏭ Pas',
-      'ui.step.title': 'Exécuter un pas (F10)',
+      'ui.step.title': 'Exécuter un pas (F10 / Pg suiv)',
       'ui.reset': '⟲ Réinit.',
       'ui.reset.title': 'Réinitialiser (Échap)',
       'ui.controls': 'Exécution',
@@ -778,7 +778,7 @@ après <code>x</code>. Majuscules et minuscules sont équivalentes.</p>
 <p>{phases}. Chaque phase se compose de micro-étapes (cycles d’horloge) ; à chaque cycle, une valeur est
 transférée sur un bus ou à l’intérieur du processeur.</p>
 <h2>Clavier</h2>
-<p>F5 démarrer/continuer · Espace pause · F10 pas · Échap réinitialiser · P mode présentation</p>`,
+<p>F5 démarrer/continuer · Espace pause · F10 ou Pg suiv (télécommande) pas · Échap réinitialiser · P mode présentation</p>`,
     },
     es: {
       'ins.0': 'Detener el programa',
@@ -900,7 +900,7 @@ transférée sur un bus ou à l’intérieur du processeur.</p>
       'ui.pause': '❚❚ Pausa',
       'ui.pause.title': 'Pausa (espacio)',
       'ui.step': '⏭ Paso',
-      'ui.step.title': 'Ejecutar un paso (F10)',
+      'ui.step.title': 'Ejecutar un paso (F10 / AvPág)',
       'ui.reset': '⟲ Reiniciar',
       'ui.reset.title': 'Reiniciar (Esc)',
       'ui.controls': 'Ejecución',
@@ -1034,7 +1034,7 @@ siguiente a <code>x</code>. No se distingue entre mayúsculas y minúsculas.</p>
 <p>{phases}. Cada fase consta de micropasos (ciclos de reloj); en cada ciclo se transfiere un valor por un bus
 o dentro de la CPU.</p>
 <h2>Teclado</h2>
-<p>F5 iniciar/continuar · Espacio pausa · F10 paso · Esc reiniciar · P modo presentación</p>`,
+<p>F5 iniciar/continuar · Espacio pausa · F10 o AvPág (presentador) paso · Esc reiniciar · P modo presentación</p>`,
     },
     // Schwäbisch (Osterei): Sparhäfele = Akku, Bühne = Speicher, Ausdeutscher = Befehlsdecoder,
     // Schees = Bus, Fähnla = Flags, hopfa = springen; Rückfall auf 'de' über PARTIAL
@@ -1158,7 +1158,7 @@ o dentro de la CPU.</p>
       'ui.pause': '❚❚ Paus',
       'ui.pause.title': 'Veschperpaus (Leertaste)',
       'ui.step': '⏭ Schrittle',
-      'ui.step.title': 'A Schrittle macha (F10)',
+      'ui.step.title': 'A Schrittle macha (F10 / Bild↓)',
       'ui.reset': '⟲ Nomol',
       'ui.reset.title': 'Nomol vo vorne (Esc)',
       'ui.controls': 'Ablauf',
@@ -1294,7 +1294,7 @@ Groß oder kloi – des isch wurscht.</p>
 <p>{phases}. Jede Phas hot Schrittla (Takt); en jedem Takt fährt a Wert mit ra Schees
 oder innerhalb vo d’r CPU.</p>
 <h2>Tastatur</h2>
-<p>F5 Los/Weiter · Leertaste Veschper · F10 Schrittle · Esc Nomol · P Beamer</p>`,
+<p>F5 Los/Weiter · Leertaste Veschper · F10 oder Bild↓ (Presenter) Schrittle · Esc Nomol · P Beamer</p>`,
     },
   };
 

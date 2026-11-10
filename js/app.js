@@ -555,7 +555,10 @@
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'F5') { e.preventDefault(); if (!ui.run.disabled) execute('end'); return; }
-      if (e.key === 'F10') { e.preventDefault(); if (!ui.step.disabled) execute(ui.granularity.value); return; }
+      // Bild↓ = „nächste Folie“ eines Presenters; im Editor bleibt es Scrollen (außer im Beamer-Modus)
+      const presenterStep = e.key === 'PageDown' &&
+        !(e.target && e.target.tagName === 'TEXTAREA' && !document.body.classList.contains('present'));
+      if (e.key === 'F10' || presenterStep) { e.preventDefault(); if (!ui.step.disabled) execute(ui.granularity.value); return; }
       if (e.key === 'Escape') { e.preventDefault(); reset(); return; }
       if (isTextField(e.target)) return;
       if (e.key === ' ') {

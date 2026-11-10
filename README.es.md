@@ -125,7 +125,7 @@ terminan en `:` (letras sin tildes, cifras y `_`).
 | | |
 |---|---|
 | **▶ Iniciar** | ejecutar hasta HALT (F5) |
-| **⏭ Paso** | un micropaso, una fase o una instrucción, según «Avance» (F10) |
+| **⏭ Paso** | un micropaso, una fase o una instrucción, según «Avance» (F10 o AvPág, p. ej. con un presentador) |
 | **Pausa / Reiniciar** | Espacio / Esc |
 | **Enlace** | copia un enlace que contiene el programa actual |
 | **Presentar** | modo presentación (P) |

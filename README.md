@@ -123,7 +123,7 @@ cell 2). Upper and lower case are treated the same; labels start a line and end 
 | | |
 |---|---|
 | **▶ Start** | run until HALT (F5) |
-| **⏭ Step** | one micro step, phase or instruction, see “Step size” (F10) |
+| **⏭ Step** | one micro step, phase or instruction, see “Step size” (F10 or PgDn, e.g. with a presenter remote) |
 | **Pause / Reset** | Space / Esc |
 | **Link** | copies a link containing the current program |
 | **Present** | presentation mode (P) |
