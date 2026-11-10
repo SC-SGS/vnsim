@@ -129,6 +129,7 @@ par `:` (lettres sans accents, chiffres et `_`).
 | **Pause / Réinit.** | Espace / Échap |
 | **Lien** | copie un lien contenant le programme actuel |
 | **Présenter** | mode présentation (P) |
+| **Zoom** | molette ou +/− dans le schéma, glisser pour déplacer ; 0 ou double-clic pour la vue d’ensemble |
 
 Onglets à gauche : **Programme** (éditeur), **Mémoire** (modifier les cellules, désassemblage),
 **Instructions** (référence des instructions), **À propos** (informations sur le simulateur).

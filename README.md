@@ -127,6 +127,7 @@ cell 2). Upper and lower case are treated the same; labels start a line and end 
 | **Pause / Reset** | Space / Esc |
 | **Link** | copies a link containing the current program |
 | **Present** | presentation mode (P) |
+| **Zoom** | mouse wheel or +/− in the diagram, drag to pan; 0 or double-click for the full view |
 
 Tabs on the left: **Program** (editor), **Memory** (edit cells, disassembly), **Instructions**
 (instruction reference), **About** (information on the simulator).

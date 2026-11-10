@@ -266,7 +266,7 @@ Groß-/Kleinschreibung spielt keine Rolle.</p>
 <p>{phases}. Jede Phase besteht aus Mikroschritten (Takten); in jedem Takt wird ein Wert über einen Bus
 oder innerhalb der CPU übertragen.</p>
 <h2>Tastatur</h2>
-<p>F5 Start/Weiter · Leertaste Pause · F10 oder Bild↓ (Presenter) Schritt · Esc Reset · P Beamer-Modus</p>`,
+<p>F5 Start/Weiter · Leertaste Pause · F10 oder Bild↓ (Presenter) Schritt · Esc Reset · P Beamer-Modus · Mausrad oder +/− Zoom (Ziehen verschiebt) · 0 oder Doppelklick Gesamtansicht</p>`,
     },
 
     en: {
@@ -522,7 +522,7 @@ Upper and lower case are treated the same.</p>
 <p>{phases}. Each phase consists of micro steps (clock cycles); in each cycle one value is transferred
 over a bus or within the CPU.</p>
 <h2>Keyboard</h2>
-<p>F5 start/continue · Space pause · F10 or PgDn (presenter) step · Esc reset · P presentation mode</p>`,
+<p>F5 start/continue · Space pause · F10 or PgDn (presenter) step · Esc reset · P presentation mode · mouse wheel or +/− zoom (drag to pan) · 0 or double-click full view</p>`,
     },
     fr: {
       'ins.0': 'Arrêter le programme',
@@ -778,7 +778,7 @@ après <code>x</code>. Majuscules et minuscules sont équivalentes.</p>
 <p>{phases}. Chaque phase se compose de micro-étapes (cycles d’horloge) ; à chaque cycle, une valeur est
 transférée sur un bus ou à l’intérieur du processeur.</p>
 <h2>Clavier</h2>
-<p>F5 démarrer/continuer · Espace pause · F10 ou Pg suiv (télécommande) pas · Échap réinitialiser · P mode présentation</p>`,
+<p>F5 démarrer/continuer · Espace pause · F10 ou Pg suiv (télécommande) pas · Échap réinitialiser · P mode présentation · molette ou +/− zoom (glisser pour déplacer) · 0 ou double-clic vue d’ensemble</p>`,
     },
     es: {
       'ins.0': 'Detener el programa',
@@ -1034,7 +1034,7 @@ siguiente a <code>x</code>. No se distingue entre mayúsculas y minúsculas.</p>
 <p>{phases}. Cada fase consta de micropasos (ciclos de reloj); en cada ciclo se transfiere un valor por un bus
 o dentro de la CPU.</p>
 <h2>Teclado</h2>
-<p>F5 iniciar/continuar · Espacio pausa · F10 o AvPág (presentador) paso · Esc reiniciar · P modo presentación</p>`,
+<p>F5 iniciar/continuar · Espacio pausa · F10 o AvPág (presentador) paso · Esc reiniciar · P modo presentación · rueda del ratón o +/− zoom (arrastrar para desplazar) · 0 o doble clic vista completa</p>`,
     },
     // Schwäbisch (Osterei): Sparhäfele = Akku, Bühne = Speicher, Ausdeutscher = Befehlsdecoder,
     // Schees = Bus, Fähnla = Flags, hopfa = springen; Rückfall auf 'de' über PARTIAL
@@ -1294,7 +1294,7 @@ Groß oder kloi – des isch wurscht.</p>
 <p>{phases}. Jede Phas hot Schrittla (Takt); en jedem Takt fährt a Wert mit ra Schees
 oder innerhalb vo d’r CPU.</p>
 <h2>Tastatur</h2>
-<p>F5 Los/Weiter · Leertaste Veschper · F10 oder Bild↓ (Presenter) Schrittle · Esc Nomol · P Beamer</p>`,
+<p>F5 Los/Weiter · Leertaste Veschper · F10 oder Bild↓ (Presenter) Schrittle · Esc Nomol · P Beamer · Mausrädle oder +/− neigucka (Ziehe verschiebt) · 0 oder Doppelklick älles seh</p>`,
     },
   };
 

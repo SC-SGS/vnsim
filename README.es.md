@@ -129,6 +129,7 @@ terminan en `:` (letras sin tildes, cifras y `_`).
 | **Pausa / Reiniciar** | Espacio / Esc |
 | **Enlace** | copia un enlace que contiene el programa actual |
 | **Presentar** | modo presentación (P) |
+| **Zoom** | rueda del ratón o +/− en el esquema, arrastrar para desplazar; 0 o doble clic para la vista completa |
 
 Pestañas a la izquierda: **Programa** (editor), **Memoria** (editar celdas, desensamblado),
 **Instrucciones** (referencia de instrucciones), **Acerca de** (información sobre el simulador).

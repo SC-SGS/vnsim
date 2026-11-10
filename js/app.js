@@ -566,6 +566,12 @@
         if (busy) pause(); else if (!ui.run.disabled) execute('end');
       } else if (e.key === 'p' || e.key === 'P') {
         document.body.classList.toggle('present');
+      } else if (e.key === '+' || e.key === '=') {
+        view.zoomBy(1.25);
+      } else if (e.key === '-') {
+        view.zoomBy(1 / 1.25);
+      } else if (e.key === '0') {
+        view.resetZoom();
       }
     });
   }

@@ -125,6 +125,7 @@ von Zelle 2). Groß-/Kleinschreibung spielt keine Rolle; Labels stehen am Zeilen
 | **Pause / Reset** | Leertaste / Esc |
 | **Link** | kopiert eine Adresse, die das aktuelle Programm enthält |
 | **Beamer** | Präsentationsmodus (P) |
+| **Zoom** | Mausrad oder +/− im Schaubild, Ziehen verschiebt; 0 oder Doppelklick zeigt wieder alles |
 
 Reiter links: **Programm** (Editor), **Speicher** (Zellen bearbeiten, Rückübersetzung der Befehle),
 **Befehle** (Befehlsreferenz), **Über** (Informationen zum Simulator).

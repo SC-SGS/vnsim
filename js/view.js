@@ -11,6 +11,10 @@ var VN = (typeof VN !== 'undefined') ? VN : {};
   const BUS = { data: 372, addr: 402, ctrl: 432 };
   const BUS_H = 20;
 
+  // Gesamtansicht (viewBox) und größter Zoomfaktor
+  const FULL = { x: 0, y: 0, w: 1000, h: 790 };
+  const MAX_ZOOM = 4;
+
   // Speicherraster
   const GRID = { x: 360, y: 514, w: 61, h: 26, cols: 10 };
 
@@ -45,7 +49,85 @@ var VN = (typeof VN !== 'undefined') ? VN : {};
     constructor(svg, handlers) {
       this.svg = svg;
       this.handlers = handlers || {};
+      this.zoom = { ...FULL };
       this.build();
+      this.bindZoom();
+    }
+
+    // ------------------------------------------------------------------ Zoom
+    // Nur die viewBox ändert sich; alle Koordinaten (ROUTES, Animation) bleiben SVG-Einheiten.
+
+    applyZoom() {
+      const z = this.zoom;
+      z.w = Math.min(FULL.w, Math.max(FULL.w / MAX_ZOOM, z.w));
+      z.h = z.w * FULL.h / FULL.w;
+      z.x = Math.min(FULL.w - z.w, Math.max(0, z.x));
+      z.y = Math.min(FULL.h - z.h, Math.max(0, z.y));
+      this.svg.setAttribute('viewBox', [z.x, z.y, z.w, z.h].map(v => +v.toFixed(2)).join(' '));
+      this.svg.classList.toggle('zoomed', z.w < FULL.w - 0.01);
+    }
+
+    // Faktor f > 1 vergrößert; (cx, cy) in SVG-Koordinaten bleibt an seinem Platz (Standard: Mitte)
+    zoomBy(f, cx, cy) {
+      const z = this.zoom;
+      if (cx === undefined) { cx = z.x + z.w / 2; cy = z.y + z.h / 2; }
+      const w = Math.min(FULL.w, Math.max(FULL.w / MAX_ZOOM, z.w / f));
+      const k = w / z.w;
+      z.x = cx - (cx - z.x) * k;
+      z.y = cy - (cy - z.y) * k;
+      z.w = w;
+      this.applyZoom();
+    }
+
+    resetZoom() { this.zoom = { ...FULL }; this.applyZoom(); }
+
+    // Bildschirm- in SVG-Koordinaten
+    toSvg(clientX, clientY) {
+      const m = this.svg.getScreenCTM();
+      if (!m) return null;
+      const p = new DOMPoint(clientX, clientY).matrixTransform(m.inverse());
+      return { x: p.x, y: p.y, scale: m.a };
+    }
+
+    bindZoom() {
+      const svg = this.svg;
+      svg.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const p = this.toSvg(e.clientX, e.clientY);
+        const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;   // Zeilen → Pixel
+        // Touchpad-Pinch kommt als Strg+Mausrad mit kleinen Werten
+        if (p) this.zoomBy(Math.exp(-dy / (e.ctrlKey ? 100 : 300)), p.x, p.y);
+      }, { passive: false });
+      svg.addEventListener('dblclick', (e) => { e.preventDefault(); this.resetZoom(); });
+
+      let drag = null, suppressClick = false;
+      svg.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0 || !svg.classList.contains('zoomed')) return;
+        drag = { id: e.pointerId, x: e.clientX, y: e.clientY, zx: this.zoom.x, zy: this.zoom.y, moved: false };
+      });
+      svg.addEventListener('pointermove', (e) => {
+        if (!drag || e.pointerId !== drag.id) return;
+        const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+        if (!drag.moved && Math.hypot(dx, dy) < 4) return;   // sonst bleibt es ein Klick
+        if (!drag.moved) { drag.moved = true; svg.setPointerCapture(e.pointerId); svg.classList.add('panning'); }
+        const m = svg.getScreenCTM();
+        const s = m ? m.a : 1;
+        this.zoom.x = drag.zx - dx / s;
+        this.zoom.y = drag.zy - dy / s;
+        this.applyZoom();
+      });
+      const end = (e) => {
+        if (!drag || e.pointerId !== drag.id) return;
+        if (drag.moved) { suppressClick = true; setTimeout(() => { suppressClick = false; }, 0); }
+        drag = null;
+        svg.classList.remove('panning');
+      };
+      svg.addEventListener('pointerup', end);
+      svg.addEventListener('pointercancel', end);
+      // Klick nach dem Verschieben nicht als Klick auf eine Speicherzelle werten
+      svg.addEventListener('click', (e) => {
+        if (suppressClick) { e.stopPropagation(); e.preventDefault(); }
+      }, true);
     }
 
     // Neu aufbauen, z. B. nach einem Sprachwechsel
@@ -61,7 +143,7 @@ var VN = (typeof VN !== 'undefined') ? VN : {};
       const svg = this.svg;
       this.regs = {};
       this.cells = [];
-      svg.setAttribute('viewBox', '0 0 1000 790');
+      this.applyZoom();
       const defs = el('defs', {}, svg);
       // Stealth-Pfeilspitze wie in TikZ
       for (const [id, cls] of [['arrow', 'arrow-data'], ['arrow-addr', 'arrow-addr'], ['arrow-ctrl', 'arrow-ctrl']]) {
